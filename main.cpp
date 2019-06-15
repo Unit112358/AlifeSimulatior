@@ -2,10 +2,14 @@
 #include "Dxlib\DxLib.h"
 #include "alife.h"
 
+using namespace std;
+
 int WINAPI WinMain(HINSTANCE,HINSTANCE,LPSTR,int){
         ChangeWindowMode(TRUE);             // ウィンドウモード変更
         DxLib_Init();                       // 初期化
         SetDrawScreen(DX_SCREEN_BACK);      //裏画面設定
+
+        Alife::setFps(60);
 
         Alife a(250, 200, 0, -10);
         a.setColor(GetColor(255,0,0));
