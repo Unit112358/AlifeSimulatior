@@ -20,8 +20,8 @@ void Alife::move()
 
 void Alife::addForce(double accelaration_x, double accelaration_y)
 {
-	velocity_x += accelaration_x;
-	velocity_y += accelaration_y;
+	velocity_x += accelaration_x * (1./60);
+	velocity_y += accelaration_y * (1./60);
 }
 
 void Alife::setColor(int color)
