@@ -1,5 +1,5 @@
 #include "alife.h"
-#include "DxLib.h"
+#include "DxLib\Dxlib.h"
 #include "iostream"
 
 void Alife::update()
