@@ -14,14 +14,14 @@ void Alife::update()
 
 void Alife::move()
 {
-	x += velocity_x;
-	y += velocity_y;
+	x += getVelocityX();
+	y += getVelocityY();
 }
 
 void Alife::addForce(double accelaration_x, double accelaration_y)
 {
-	velocity_x += accelaration_x;
-	velocity_y += accelaration_y;
+	v_x += accelaration_x;
+	v_y += accelaration_y;
 }
 
 void Alife::setColor(int color)
@@ -41,10 +41,12 @@ void Alife::draw()
 	}
 }
 
-double Alife::getVelocityX() { return velocity_x; }
+inline double Alife::getVelocityX() { return s_v_x + v_x * spf; }
 
-double Alife::getVelocityY() { return velocity_y; }
+inline double Alife::getVelocityY() { return s_v_y + v_y * spf; }
 
-double Alife::getX() { return x; }
-
-double Alife::getY() { return y; }
+void Alife::setFps(int a)
+{
+	Alife::fps = a;
+	Alife::spf = 1./a;
+}
