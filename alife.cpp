@@ -15,7 +15,7 @@ void Alife::update()
 	velocity_x *= attenuation_rate;
 	velocity_y *= attenuation_rate;
 	*/
-	// act();
+	act();
 	move();
 	draw();
 }
@@ -51,6 +51,14 @@ void Alife::setFps(int a)
 {
 	fps = a;
 	spf = 1./a;
+}
+
+void Alife::setMem(byte* mem, uint size)
+{
+	byte* tmp = (byte*)malloc(size);
+	memcpy(tmp, mem, size);
+	this->mem = tmp;
+	cpu->rip = tmp;
 }
 
 void Alife::act()
@@ -90,6 +98,9 @@ void Alife::act()
 			break;
 		case ADDFRC_RR:
 			next = addfrc_rr();
+			break;
+		case GET_NEAR:
+			next = get_near();
 			break;
 		default:
 			next = 1;
@@ -236,4 +247,22 @@ int Alife::addfrc_rr()
 	addForce(*RESISTER(cpu, x_r), *RESISTER(cpu, y_r));
 
 	return 3;
+}
+
+int Alife::get_near()
+{
+	int id = -1;
+	uint min_dist = (uint)-1;
+	for(Alife* p : alife_list)
+	{
+		uint dist = (uint)((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
+		if(min_dist > dist)
+		{
+			id = p->id;
+			min_dist = dist;
+		}
+	}
+
+	cpu->rax = id;
+	return 1;
 }

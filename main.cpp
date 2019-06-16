@@ -12,12 +12,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     Alife::setFps(60);
 
-        Alife a(250, 200, 0, -7);
-        a.setColor(GetColor(255,0,0));
+    Alife a(0, 0, 2, 0);
+    a.setColor(GetColor(255,0,0));
+
+    byte mem[] = {ADDFRC_II, 0, 2, JMP, (byte)-3};
+    a.setMem(mem, sizeof(mem));
 
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
-    while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0)
+    while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)
     {
         a.addForce((200 - a.getX()), (200 - a.getY()));
         a.update();
