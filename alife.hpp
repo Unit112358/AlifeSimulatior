@@ -91,7 +91,7 @@ typedef enum _instruction
 	GETVEC_R
 } instruction;
 
-constexpr double attenuation_rate = 0.9;
+constexpr double attenuation_rate = 0.99;
 const int tail_length = 10;
 
 class Alife

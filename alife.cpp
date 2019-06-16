@@ -20,10 +20,11 @@ CPU* new_cpu()
 
 void Alife::update()
 {
-	/*
-	velocity_x *= attenuation_rate;
-	velocity_y *= attenuation_rate;
-	*/
+	v_x *= attenuation_rate;
+	v_y *= attenuation_rate;
+	s_v_x *= attenuation_rate;
+	s_v_y *= attenuation_rate;
+
 	act();
 	move();
 	draw();
