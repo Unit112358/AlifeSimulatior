@@ -12,11 +12,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     Alife::setFps(60);
 
-    Alife a(0, 0, 2, 0);
+    Alife a(200, 200, 0, 0), b(300, 300, 0, 0);
     a.setColor(GetColor(255,0,0));
+    b.setColor(GetColor(0, 0, 255));
 
     byte mem[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5, EXIT, EXIT, EXIT, EXIT, EXIT};
     a.setMem(mem, sizeof(mem));
+    b.setMem(mem, sizeof(mem));
 
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
@@ -24,6 +26,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     {
         // a.addForce((200 - a.getX()), (200 - a.getY()));
         a.update();
+        b.update();
     }
 
     DxLib_End(); // DXライブラリ終了処理

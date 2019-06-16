@@ -29,7 +29,6 @@ int main()
     int64 a = 0xaabbccdd11223344;
     i64toByteArray b;
     b.i64 = a;
-    byte mem2[] = {}
 
     printf("0x%x\n", HIINT64(a));
     printf("0x%x\n", LOWINT64(a));
@@ -45,6 +44,12 @@ int main()
         printf("0x%x\n", b.byteArray[i]);
     }
     printf("0x%llx\n", *(int64*)(b.byteArray));
+
+    int64 c = -90349035117870904;
+    printf("0x%llx\n", c);
+    printf("0x%x\n", -21036024);
+    printf("0x%x\n", 200);
+
     system("pause");
 
     return 0;

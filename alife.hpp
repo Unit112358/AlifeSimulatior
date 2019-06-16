@@ -113,19 +113,19 @@ public:
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
-		id = ++num;
+		id = num++;
 		alife_list.push_back(this);
 	}
 	Alife(double x, double y, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
-		id = ++num;
+		id = num++;
 		alife_list.push_back(this);
 	}
 	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
 	//Alife(double x, double y, int energy, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(energy), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
-	~Alife() {delete mem;free(cpu);};
+	~Alife() {free(mem);free(cpu);};
 	void update();
 	void move();
 	void draw();

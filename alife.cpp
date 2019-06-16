@@ -1,5 +1,14 @@
 #include "alife.hpp"
 #include "DxLib\Dxlib.h"
+#include <iostream>
+#include <fstream>
+
+#define ALIFEDEBUG
+
+#ifdef ALIFEDEBUG
+const char* filename = "alife_log.txt";
+std::ofstream ofs(filename);
+#endif
 
 CPU* new_cpu()
 {
@@ -63,6 +72,10 @@ void Alife::setMem(byte* mem, uint size)
 
 void Alife::act()
 {
+	#ifdef ALIFEDEBUG
+	ofs << (int)(*cpu->rip) << std::endl;
+	#endif
+
 	int next = 1;
 	switch(*cpu->rip)
 	{
@@ -107,10 +120,15 @@ void Alife::act()
 			break;
 		case GETVEC_R:
 			next = getvec_r();
+			break;
 		default:
 			next = 1;
 			break; 
 	}
+	#ifdef ALIFEDEBUG
+	ofs << (int)(*cpu->rip) << std::endl;
+	#endif
+
 	cpu->rip += next;
 }
 
@@ -259,6 +277,11 @@ int Alife::addfrc_r()
 
 	vec = *RESISTER(cpu, cpu->rip[1]);
 
+	#ifdef ALIFEDEBUG
+	ofs << "vec: " << vec << std::endl;
+	ofs << "x: " << vec_x(vec) << " y: " << vec_y(vec) << std::endl;
+	#endif
+
 	addForce(vec_x(vec), vec_y(vec));
 
 	return 2;
@@ -270,7 +293,7 @@ int Alife::getnear()
 	uint min_dist = (uint)-1;
 	for(Alife* p : alife_list)
 	{
-		if(p->id == id) continue;
+		if(p->id == this->id) continue;
 		uint dist = (uint)((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
 		if(min_dist > dist)
 		{
@@ -287,10 +310,20 @@ int Alife::getvec_r()
 {
 	int id = *RESISTER(cpu, cpu->rip[1]);
 	if(id < 0 || alife_list.size() <= id) id = this->id;
-	int x = alife_list[id]->x - x;
-	int y = alife_list[id]->y - y;
+	int64 x = alife_list[id]->x - this->x;
+	int y = alife_list[id]->y - this->y;
+
+	#ifdef ALIFEDEBUG
+	ofs << "id: " << id << std::endl;
+	ofs << "x: " << x << " y: " <<  y << std::endl;
+	ofs << "rax(vec): " << cpu->rax << std::endl;
+	#endif
 
 	cpu->rax = (x << 32) | y;
+
+	#ifdef ALIFEDEBUG
+	ofs << "rax(vec): " << cpu->rax << std::endl;
+	#endif
 
 	return 2;
 }
