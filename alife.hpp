@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.hpp"
 
 // utilに移す
 typedef unsigned int uint;
@@ -27,6 +28,11 @@ typedef struct _cpu
 
     int64 rbp;
     int64 rsp;
+
+	int64 r9;
+	int64 r10;
+	int64 r11;
+
     byte* rip;
 
     int64 flags;
@@ -46,6 +52,9 @@ typedef enum _resister
     RDI,
     RBP,
     RSP,
+	R9,
+	R10,
+	R11,
     RIP,
     FLAGS
 } resister;
@@ -64,7 +73,7 @@ typedef enum _instruction
     SUB,
     MUL,
     DIV,
-    AND,
+    AND_RR,
     OR,
     XOR,
     INC,
@@ -77,8 +86,9 @@ typedef enum _instruction
     PUSH,
     SYSCALL,
 	ADDFRC_II,
-	ADDFRC_RR,
-	GET_NEAR
+	ADDFRC_R,
+	GETNEAR,
+	GETVEC_R
 } instruction;
 
 constexpr double attenuation_rate = 0.9;
@@ -87,7 +97,7 @@ const int tail_length = 10;
 class Alife
 {
 private:
-	double y, x;
+	double x, y;
 	double s_v_x, s_v_y;
 	double v_x, v_y;
 	int energy;
@@ -148,6 +158,7 @@ public:
 	int mov_ri();	// レジスタに即値を代入する
 	int add_rr();
 	int add_ri();
+	int and_rr();
 	int inc();
 	int dec();
 	int loop();
@@ -156,8 +167,9 @@ public:
 	int syscall();
 
 	int addfrc_ii();
-	int addfrc_rr();
-	int get_near();
+	int addfrc_r();
+	int getnear();
+	int getvec_r();
 };
 
 int Alife::fps = 60;

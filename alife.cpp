@@ -63,7 +63,7 @@ void Alife::setMem(byte* mem, uint size)
 
 void Alife::act()
 {
-	int next;
+	int next = 1;
 	switch(*cpu->rip)
 	{
 		case EXIT:
@@ -81,6 +81,9 @@ void Alife::act()
 		case ADD_RI:
 			next = add_ri();
 			break;
+		case AND_RR:
+			next = and_rr();
+			break;
 		case INC:
 			next = inc();
 			break;
@@ -96,12 +99,14 @@ void Alife::act()
 		case ADDFRC_II:
 			next = addfrc_ii();
 			break;
-		case ADDFRC_RR:
-			next = addfrc_rr();
+		case ADDFRC_R:
+			next = addfrc_r();
 			break;
-		case GET_NEAR:
-			next = get_near();
+		case GETNEAR:
+			next = getnear();
 			break;
+		case GETVEC_R:
+			next = getvec_r();
 		default:
 			next = 1;
 			break; 
@@ -154,6 +159,17 @@ int Alife::add_ri()
     *RESISTER(cpu, dst) = *RESISTER(cpu, dst) + src;
 
     return 3;
+}
+
+int Alife::and_rr()
+{
+	byte dst, src;
+	dst = cpu->rip[1];
+	src = cpu->rip[2];
+
+	*RESISTER(cpu, dst) = *RESISTER(cpu, dst) & *RESISTER(cpu, src);
+
+	return 3;
 }
 
 int Alife::inc()
@@ -237,24 +253,24 @@ int Alife::addfrc_ii()
 	return 3;
 }
 
-int Alife::addfrc_rr()
+int Alife::addfrc_r()
 {
-	byte x_r, y_r;
+	int64 vec;
 
-	x_r = cpu->rip[1];
-	y_r = cpu->rip[2];
+	vec = *RESISTER(cpu, cpu->rip[1]);
 
-	addForce(*RESISTER(cpu, x_r), *RESISTER(cpu, y_r));
+	addForce(vec_x(vec), vec_y(vec));
 
-	return 3;
+	return 2;
 }
 
-int Alife::get_near()
+int Alife::getnear()
 {
 	int id = -1;
 	uint min_dist = (uint)-1;
 	for(Alife* p : alife_list)
 	{
+		if(p->id == id) continue;
 		uint dist = (uint)((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
 		if(min_dist > dist)
 		{
@@ -265,4 +281,16 @@ int Alife::get_near()
 
 	cpu->rax = id;
 	return 1;
+}
+
+int Alife::getvec_r()
+{
+	int id = *RESISTER(cpu, cpu->rip[1]);
+	if(id < 0 || alife_list.size() <= id) id = this->id;
+	int x = alife_list[id]->x - x;
+	int y = alife_list[id]->y - y;
+
+	cpu->rax = (x << 32) | y;
+
+	return 2;
 }

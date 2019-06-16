@@ -15,7 +15,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     Alife a(0, 0, 2, 0);
     a.setColor(GetColor(255,0,0));
 
-    byte mem[] = {ADDFRC_II, 0, 2, JMP, (byte)-3};
+    byte mem[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5, EXIT, EXIT, EXIT, EXIT, EXIT};
     a.setMem(mem, sizeof(mem));
 
     // メインループ
