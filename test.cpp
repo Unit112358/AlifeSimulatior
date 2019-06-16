@@ -47,8 +47,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		double k = pow(sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)), 2.0) / 10000;
 		
-		sample1.addForce((x2 - x1) / 60.0 / k, (y2 - y1) / 60.0 / k);
-		sample2.addForce((x1 - x2) / 60.0 / k, (y1 - y2) / 60.0 / k);
+		sample1.addForce((x2 - x1) / k, (y2 - y1) / k);
+		sample2.addForce((x1 - x2) / k, (y1 - y2) / k);
 
 		sample1.update();
 		sample2.update();
