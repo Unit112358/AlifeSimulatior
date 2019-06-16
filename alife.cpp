@@ -47,6 +47,6 @@ inline double Alife::getVelocityY() { return s_v_y + v_y * spf; }
 
 void Alife::setFps(int a)
 {
-	Alife::fps = a;
-	Alife::spf = 1./a;
+	fps = a;
+	spf = 1./a;
 }

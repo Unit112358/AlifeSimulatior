@@ -30,11 +30,14 @@ public:
 	void addForce(double x, double y);
 	double getVelocityX();
 	double getVelocityY();
-	double getX();
-	double getY();
+	double getX() const {return x;}
+	double getY() const {return y;}
 	static void setFps(int a);
 	static int fps;
 	static double spf;
 };
+
+int Alife::fps = 60;
+double Alife::spf = 1./60;
 
 #include "alife.cpp"
