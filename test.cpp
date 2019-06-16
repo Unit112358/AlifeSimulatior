@@ -1,6 +1,6 @@
 #include "DxLib\DxLib.h"
 //#include "CPU.cpp"
-#include "alife.h"
+#include "alife.hpp"
 #include <math.h>
 #include <iostream>
 
