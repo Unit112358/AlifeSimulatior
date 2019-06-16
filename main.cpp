@@ -1,6 +1,6 @@
 
 #include "Dxlib\DxLib.h"
-#include "alife.h"
+#include "alife.hpp"
 
 using namespace std;
 
@@ -12,8 +12,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     Alife::setFps(60);
 
-    Alife a(250, 200, 0, -20);
-    a.setColor(GetColor(255, 0, 0));
+        Alife a(250, 200, 0, -7);
+        a.setColor(GetColor(255,0,0));
 
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
