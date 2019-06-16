@@ -119,6 +119,9 @@ void Alife::act()
 		case GETNEAR:
 			next = getnear();
 			break;
+		case GETNUM_I:
+			next = getnum_i();
+			break;
 		case GETVEC_R:
 			next = getvec_r();
 			break;
@@ -307,6 +310,20 @@ int Alife::getnear()
 	return 1;
 }
 
+int Alife::getnum_i()
+{
+	int num = -1;
+	int dist = cpu->rip[1];
+
+	for(Alife* p : alife_list)
+		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
+			num++;
+			
+	cpu->rax = num;
+
+	return 2;
+}
+
 int Alife::getvec_r()
 {
 	int id = *RESISTER(cpu, cpu->rip[1]);
@@ -314,17 +331,7 @@ int Alife::getvec_r()
 	int64 x = alife_list[id]->x - this->x;
 	int y = alife_list[id]->y - this->y;
 
-	#ifdef ALIFEDEBUG
-	ofs << "id: " << id << std::endl;
-	ofs << "x: " << x << " y: " <<  y << std::endl;
-	ofs << "rax(vec): " << cpu->rax << std::endl;
-	#endif
-
 	cpu->rax = (x << 32) | y;
-
-	#ifdef ALIFEDEBUG
-	ofs << "rax(vec): " << cpu->rax << std::endl;
-	#endif
 
 	return 2;
 }

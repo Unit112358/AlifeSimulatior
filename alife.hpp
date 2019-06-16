@@ -88,7 +88,8 @@ typedef enum _instruction
 	ADDFRC_II,
 	ADDFRC_R,
 	GETNEAR,
-	GETVEC_R
+	GETVEC_R,
+	GETNUM_I
 } instruction;
 
 constexpr double attenuation_rate = 0.99;
@@ -169,6 +170,7 @@ public:
 	int addfrc_ii();
 	int addfrc_r();
 	int getnear();
+	int getnum_i();
 	int getvec_r();
 };
 
