@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
+#include "alife.hpp"
 
 typedef struct _AlifeList
 {
@@ -17,13 +18,13 @@ AlifeList* new_AlifeList()
     p->data = (Alife**)malloc(sizeof(Alife*) * p->cap);
 }
 
-ALifeList* AlifeList_append(AlifeList* list, Alife *p)
+AlifeList* AlifeList_append(AlifeList* list, Alife *p)
 {
-    list->data[len++] = p;
+    list->data[list->len++] = p;
     if(list->len == list->cap)
     {
         list->cap *= 2;
-        list->data = (Alife**)realloc(list->data, sizeof(Alife*) * p->cap)
+        list->data = (Alife**)realloc(list->data, sizeof(Alife*) * list->cap);
     }
     return list;
 }

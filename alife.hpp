@@ -5,6 +5,7 @@
 #include <string.h>
 
 // utilに移す
+typedef unsigned int uint;
 typedef long long int int64;
 typedef int int32;
 typedef short int16;
@@ -12,6 +13,7 @@ typedef char int8;
 typedef unsigned char byte;
 
 using namespace std;
+// using byte = unsigned char;
 
 // CPU構造体の定義
 typedef struct _cpu
