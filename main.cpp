@@ -22,7 +22,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
     while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)
     {
-        a.addForce((200 - a.getX()), (200 - a.getY()));
+        // a.addForce((200 - a.getX()), (200 - a.getY()));
         a.update();
     }
 
