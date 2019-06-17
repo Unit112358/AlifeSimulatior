@@ -16,6 +16,16 @@ typedef unsigned char byte;
 using namespace std;
 // using byte = unsigned char;
 
+typedef union _flags
+{
+	int64 i64;
+	struct
+	{
+		bool zero : 1;
+		unsigned : 0;
+	} f;
+} flags;
+
 // CPU構造体の定義
 typedef struct _cpu
 {
@@ -35,7 +45,7 @@ typedef struct _cpu
 
     byte* rip;
 
-    int64 flags;
+    flags flags;
 
     int64 stack[10];
 }CPU;
@@ -164,6 +174,8 @@ public:
 	int dec();
 	int loop();
 	int jmp();
+	int zj();
+	int nzj();
 
 	int syscall();
 

@@ -169,7 +169,12 @@ int Alife::add_rr()
 
     *RESISTER(cpu, dst) = *RESISTER(cpu, dst) + *RESISTER(cpu, src);
 
-    return 3;
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	return 3;
 }
 int Alife::add_ri()
 {
@@ -179,6 +184,11 @@ int Alife::add_ri()
     src = cpu->rip[2];
 
     *RESISTER(cpu, dst) = *RESISTER(cpu, dst) + src;
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
 
     return 3;
 }
@@ -191,6 +201,11 @@ int Alife::and_rr()
 
 	*RESISTER(cpu, dst) = *RESISTER(cpu, dst) & *RESISTER(cpu, src);
 
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
 	return 3;
 }
 
@@ -201,6 +216,11 @@ int Alife::inc()
 
     *RESISTER(cpu, dst) += 1;
 
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
     return 2;
 }
 
@@ -210,6 +230,11 @@ int Alife::dec()
     dst = cpu->rip[1];
 
     *RESISTER(cpu, dst) -= 1;
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
 
     return 2;
 }
@@ -234,6 +259,25 @@ int Alife::jmp()
     dst = cpu->rip[1];
 
     return (signed char)dst;
+}
+
+int Alife::zj()
+{
+	byte dst;
+	dst = cpu->rip[1];
+	
+	if(cpu->flags.f.zero)
+		return (signed char)dst;
+	return 2;
+}
+int Alife::nzj()
+{
+	byte dst;
+	dst = cpu->rip[1];
+	
+	if(!cpu->flags.f.zero)
+		return (signed char)dst;
+	return 2;
 }
 
 int Alife::syscall()
