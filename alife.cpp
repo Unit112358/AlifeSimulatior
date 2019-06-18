@@ -1,7 +1,4 @@
 #include "alife.hpp"
-#include "DxLib\Dxlib.h"
-#include <iostream>
-#include <fstream>
 
 #define ALIFEDEBUG
 
@@ -34,6 +31,33 @@ void Alife::move()
 {
 	x += getVelocityX();
 	y += getVelocityY();
+
+	//超えた分を引いてるだけだからあまりに飛びすぎるとバグる
+	//かなり速度が速くなってもバグらなかったからとりあえずこのまま
+	if(x < 0)
+	{
+		x *= -1.0;
+		s_v_x *= -1.0;
+		v_x *= -1.0;
+	}
+	if(x > WINDOW_WIDTH)
+	{
+		x = WINDOW_WIDTH - (x - WINDOW_WIDTH);
+		s_v_x *= -1.0;
+		v_x *= -1.0;
+	}
+	if(y < 0)
+	{
+		y *= -1.0;
+		s_v_y *= -1.0;
+		v_y *= -1.0;
+	}
+	if(y > WINDOW_HEIGHT)
+	{
+		y = WINDOW_HEIGHT - (y - WINDOW_HEIGHT);
+		s_v_y *= -1.0;
+		v_y *= -1.0;
+	}
 }
 
 void Alife::setColor(int color)

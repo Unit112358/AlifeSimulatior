@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utils.hpp"
+#include "DxLib\Dxlib.h"
+#include <iostream>
+#include <fstream>
 
 // utilに移す
 typedef unsigned int uint;
@@ -102,7 +105,7 @@ typedef enum _instruction
 	GETNUM_I
 } instruction;
 
-constexpr double attenuation_rate = 0.99;
+constexpr double attenuation_rate = 1.0;
 const int tail_length = 10;
 
 class Alife

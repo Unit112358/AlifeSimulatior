@@ -10,6 +10,9 @@
 #define vec_x(a) HIGHINT64(a)
 #define vec_y(a) LOWINT64(a)
 
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 480
+
 
 // typedef struct _AlifeList
 // {
