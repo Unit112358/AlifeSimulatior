@@ -128,6 +128,9 @@ void Alife::act()
 		case DEC:
 			next = dec();
 			break;
+		case CMP_RR:
+			next = cmp_rr();
+			break;
 		case LOOP:
 			next = loop();
 			break;
@@ -145,6 +148,12 @@ void Alife::act()
 			break;
 		case GETNUM_I:
 			next = getnum_i();
+			break;
+		case GETNUM_R:
+			next = getnum_r();
+			break;
+		case GETDIST_R:
+			next = getdist_r();
 			break;
 		case GETVEC_R:
 			next = getvec_r();
@@ -198,6 +207,11 @@ int Alife::add_rr()
 	else
 		cpu->flags.f.zero = 0;
 
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
 	return 3;
 }
 int Alife::add_ri()
@@ -213,6 +227,11 @@ int Alife::add_ri()
 		cpu->flags.f.zero = 1;
 	else
 		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
 
     return 3;
 }
@@ -230,6 +249,11 @@ int Alife::and_rr()
 	else
 		cpu->flags.f.zero = 0;
 
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
 	return 3;
 }
 
@@ -245,6 +269,11 @@ int Alife::inc()
 	else
 		cpu->flags.f.zero = 0;
 
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
     return 2;
 }
 
@@ -259,8 +288,33 @@ int Alife::dec()
 		cpu->flags.f.zero = 1;
 	else
 		cpu->flags.f.zero = 0;
+	
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
 
     return 2;
+}
+
+int Alife::cmp_rr()
+{
+	byte dst, src;
+	
+	dst = cpu->rip[1];
+	src = cpu->rip[2];
+
+	int64 tmp = *RESISTER(cpu, dst) - *RESISTER(cpu, src);
+	
+	if(tmp == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+		
+	if(tmp < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
 }
 
 int Alife::loop()
@@ -389,6 +443,27 @@ int Alife::getnum_i()
 			
 	cpu->rax = num;
 
+	return 2;
+}
+
+int Alife::getnum_r()
+{
+	int num = -1;
+	int dist = *RESISTER(cpu, cpu->rip[1]);
+
+	for(Alife* p : alife_list)
+		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
+			num++;
+
+	cpu->rax = num;
+	return 2;
+}
+
+int Alife::getdist_r()
+{
+	int id = *RESISTER(cpu, cpu->rip[1]);
+	cpu->rax = (int64)sqrt((alife_list[id]->x - x) * (alife_list[id]->x - x) + (alife_list[id]->y - y) * (alife_list[id]->y - y));
+	
 	return 2;
 }
 

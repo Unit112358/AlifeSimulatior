@@ -7,6 +7,7 @@
 #include "DxLib\Dxlib.h"
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 // utilに移す
 typedef unsigned int uint;
@@ -25,6 +26,7 @@ typedef union _flags
 	struct
 	{
 		bool zero : 1;
+		bool sign : 1;
 		unsigned : 0;
 	} f;
 } flags;
@@ -91,6 +93,7 @@ typedef enum _instruction
     XOR,
     INC,
     DEC,
+	CMP_RR,
     LOOP,
     JMP,
     ZJ,
@@ -101,8 +104,10 @@ typedef enum _instruction
 	ADDFRC_II,
 	ADDFRC_R,
 	GETNEAR,
+	GETNUM_I,
+	GETNUM_R,
+	GETDIST_R,
 	GETVEC_R,
-	GETNUM_I
 } instruction;
 
 constexpr double attenuation_rate = 1;
@@ -175,6 +180,7 @@ public:
 	int and_rr();
 	int inc();
 	int dec();
+	int cmp_rr();
 	int loop();
 	int jmp();
 	int zj();
@@ -186,6 +192,8 @@ public:
 	int addfrc_r();
 	int getnear();
 	int getnum_i();
+	int getnum_r();
+	int getdist_r();
 	int getvec_r();
 };
 
