@@ -108,9 +108,10 @@ typedef enum _instruction
 	GETNUM_R,
 	GETDIST_R,
 	GETVEC_R,
+	BITE
 } instruction;
 
-constexpr double attenuation_rate = 1;
+constexpr double attenuation_rate = 0.99;
 const int tail_length = 10;
 
 class Alife
@@ -119,7 +120,7 @@ private:
 	int x, y;
 	int s_v_x, s_v_y;
 	int v_x, v_y;
-	int energy;
+	int energy = 10;
 	int size = 10;
 	int color;
 	int tail_x[tail_length];
@@ -145,7 +146,7 @@ public:
 	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
 	//Alife(double x, double y, int energy, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(energy), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
 	~Alife() {free(mem);free(cpu);};
-	void update();
+	bool update();
 	void move();
 	void draw();
 	void setColor(int color);
@@ -195,6 +196,7 @@ public:
 	int getnum_r();
 	int getdist_r();
 	int getvec_r();
+	int bite();
 };
 
 int Alife::fps = 60;

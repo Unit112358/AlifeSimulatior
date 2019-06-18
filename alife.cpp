@@ -15,8 +15,13 @@ CPU* new_cpu()
     return p;
 }
 
-void Alife::update()
+bool Alife::update()
 {
+	if(energy < 0)
+	{
+		alife_list[id] = nullptr;
+		return false;
+	}
 	v_x *= attenuation_rate;
 	v_y *= attenuation_rate;
 	s_v_x *= attenuation_rate;
@@ -25,6 +30,7 @@ void Alife::update()
 	act();
 	move();
 	draw();
+	return true;
 }
 
 void Alife::move()
@@ -157,6 +163,9 @@ void Alife::act()
 			break;
 		case GETVEC_R:
 			next = getvec_r();
+			break;
+		case BITE:
+			next = bite();
 			break;
 		default:
 			next = 1;
@@ -419,7 +428,7 @@ int Alife::getnear()
 	uint min_dist = (uint)-1;
 	for(Alife* p : alife_list)
 	{
-		if(p->id == this->id) continue;
+		if(p == nullptr || p->id == this->id) continue;
 		uint dist = (uint)((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
 		if(min_dist > dist)
 		{
@@ -438,9 +447,12 @@ int Alife::getnum_i()
 	int dist = cpu->rip[1];
 
 	for(Alife* p : alife_list)
+	{
+		if(p == nullptr)continue;
 		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
 			num++;
-			
+	}
+
 	cpu->rax = num;
 
 	return 2;
@@ -452,8 +464,11 @@ int Alife::getnum_r()
 	int dist = *RESISTER(cpu, cpu->rip[1]);
 
 	for(Alife* p : alife_list)
+	{
+		if(p == nullptr)continue;
 		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
 			num++;
+	}
 
 	cpu->rax = num;
 	return 2;
@@ -477,4 +492,38 @@ int Alife::getvec_r()
 	cpu->rax = (x << 32) | y;
 
 	return 2;
+}
+
+int Alife::bite()
+{
+	int id = -1;
+	uint min_dist = (uint)-1;
+	for(Alife* p : alife_list)
+	{
+		if(p == nullptr || p->id == this->id)continue;
+		uint dist = (uint)((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y));
+		
+		#ifdef ALIFEDEBUG
+		ofs << "i: " << p->id << std::endl;
+		ofs << "min_dist: " << min_dist << " dist: " << dist << std::endl;
+		#endif
+
+		if(dist <= (uint)(size * size))
+		{
+			if(min_dist > dist)
+			{
+				min_dist = dist;
+				id = p->id;
+			}
+		}
+	}
+
+	if(id != -1)alife_list[id]->energy--;
+
+	
+	#ifdef ALIFEDEBUG
+	ofs << "id: " << id << std::endl;
+	#endif
+
+	return 1;
 }
