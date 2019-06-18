@@ -36,27 +36,27 @@ void Alife::move()
 	//かなり速度が速くなってもバグらなかったからとりあえずこのまま
 	if(x < 0)
 	{
-		x *= -1.0;
-		s_v_x *= -1.0;
-		v_x *= -1.0;
+		x *= -1;
+		s_v_x *= -1;
+		v_x *= -1;
 	}
 	if(x > WINDOW_WIDTH)
 	{
 		x = WINDOW_WIDTH - (x - WINDOW_WIDTH);
-		s_v_x *= -1.0;
-		v_x *= -1.0;
+		s_v_x *= -1;
+		v_x *= -1;
 	}
 	if(y < 0)
 	{
-		y *= -1.0;
-		s_v_y *= -1.0;
-		v_y *= -1.0;
+		y *= -1;
+		s_v_y *= -1;
+		v_y *= -1;
 	}
 	if(y > WINDOW_HEIGHT)
 	{
 		y = WINDOW_HEIGHT - (y - WINDOW_HEIGHT);
-		s_v_y *= -1.0;
-		v_y *= -1.0;
+		s_v_y *= -1;
+		v_y *= -1;
 	}
 }
 
@@ -73,13 +73,13 @@ void Alife::draw()
 
 	for (int i = 0, index = tail_index; i < tail_length; i++, index = (index - 1 + tail_length) % tail_length)
 	{
-		DrawCircle((int)tail_x[index], (int)tail_y[index], size - i, color, 1);
+		DrawCircle(tail_x[index], tail_y[index], size - i, color, 1);
 	}
 }
 
-inline double Alife::getVelocityX() { return s_v_x + v_x * spf; }
+inline int Alife::getVelocityX() { return s_v_x + v_x * spf; }
 
-inline double Alife::getVelocityY() { return s_v_y + v_y * spf; }
+inline int Alife::getVelocityY() { return s_v_y + v_y * spf; }
 
 void Alife::setFps(int a)
 {
@@ -324,7 +324,7 @@ int Alife::syscall()
 }
 
 
-inline void Alife::addForce(double accelaration_x, double accelaration_y)
+inline void Alife::addForce(int accelaration_x, int accelaration_y)
 {
 	v_x += accelaration_x;
 	v_y += accelaration_y;
