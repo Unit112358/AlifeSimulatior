@@ -25,7 +25,8 @@ bool Alife::update()
 	act();
 	move();
 	draw();
-	if(energy < 0)return false;
+	if(energy < 0)
+		return false;
 	return true;
 }
 
@@ -500,6 +501,7 @@ int Alife::bite()
 	for(auto ite : alife_list)
 	{
 		Alife *p = ite.second;
+		if(p->id == this->id)continue;
 		double dist = (p->x - x) * (p->x - x) + (p->y - y) * (p->y - y);
 		
 		#ifdef ALIFEDEBUG

@@ -127,6 +127,7 @@ private:
 	double tail_x[tail_length];
 	double tail_y[tail_length];
 	int tail_index = 0;
+	int id;
 
 public:
 	Alife(double x, double y) :x(x), y(y), energy(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
@@ -159,7 +160,7 @@ public:
 	static int fps; 		// frame per second
 	static double spf; 		// second per frame
 	static int num;
-	int id;
+	int getId() {return id;}
 	static map<int, Alife *> alife_list;
 
 

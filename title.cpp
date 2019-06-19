@@ -29,6 +29,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 }
 #endif
 
+//進捗を生やす
 int title(int width, int height)
 {
     DrawString(width/2, height/2 - 40, "PLAY", GetColor(255, 0, 0));

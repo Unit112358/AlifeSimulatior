@@ -31,24 +31,31 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     byte mem_biter[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-6};
     byte mem_chaser[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5};
 
-    a->setMem(mem_chaser, sizeof(mem_chaser));
-    b->setMem(mem_chaser, sizeof(mem_chaser));
-    c->setMem(mem_chaser, sizeof(mem_chaser));
-    d->setMem(mem_chaser, sizeof(mem_chaser));
-    e->setMem(mem_chaser, sizeof(mem_chaser));
-    f->setMem(mem_chaser, sizeof(mem_chaser));
+    a->setMem(mem_biter, sizeof(mem_biter));
+    b->setMem(mem_biter, sizeof(mem_biter));
+    c->setMem(mem_biter, sizeof(mem_biter));
+    d->setMem(mem_biter, sizeof(mem_biter));
+    e->setMem(mem_biter, sizeof(mem_biter));
+    f->setMem(mem_biter, sizeof(mem_biter));
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
     while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)
     {
         // a.addForce((200 - a.getX()), (200 - a.getY()));
+        // nann no bag ga arunnya
+        // eraseの引数としてイテレータを渡せるんだけど
+        //なぜかバグる
+        //だから今はkeyを渡すように実装してる
+        // iterator　を渡すようにしてもおいしいことなくない？
+        //discordを使え
+        //じゃあ変更してみるよ
+        //
         for(auto ite : Alife::alife_list)
         {
             Alife* p = ite.second;
             if(!(p->update()))
             {
-                p->id;
-                Alife::alife_list.erase(p->id);
+                Alife::alife_list.erase(p->getId());
                 delete p;
             }
         }
