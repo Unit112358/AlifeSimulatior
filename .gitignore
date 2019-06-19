@@ -1,5 +1,4 @@
 *.exe
-Log.txt
 test
 .vscode
-*log.txt
+*.txt

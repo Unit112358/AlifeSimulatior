@@ -37,6 +37,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 int title(int width, int height)
 {
     int selected = 0;
+    int n_up = 0;
+    int n_down = 0;
+
     SetFontSize(32);
 
     while(ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0)
@@ -55,9 +58,25 @@ int title(int width, int height)
             DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
         }
         if(CheckHitKey(KEY_INPUT_UP))
-            selected = (selected - 1 + N_MENU) % N_MENU;
+        {
+            n_up++;
+            if(n_up%60 == 1)
+                selected = (selected - 1 + N_MENU) % N_MENU;
+        }
+        else
+            n_up = 0;
+        
         if(CheckHitKey(KEY_INPUT_DOWN))
-            selected = (selected + 1) % N_MENU;
+        {
+            n_down++;
+            if(n_down%10 == 1)
+                selected = (selected + 1) % N_MENU;
+        }
+        else
+            n_down = 0;
+        
+        if(CheckHitKey(KEY_INPUT_RETURN))
+            break;
     }
-    return 0;
+    return selected;
 }
