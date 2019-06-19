@@ -10,6 +10,8 @@ enum
 
 int title(int width, int height);
 
+const TCHAR TitleStrings[][10] = {"PLAY", "SETTING", "QUIT"};
+
 #define TEST_TITLE
 
 #ifdef TEST_TITLE
@@ -26,16 +28,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     title(scrWidth, scrHeight);
 
     DxLib_End();
+
+    return 0;
 }
 #endif
 
 //進捗を生やす
 int title(int width, int height)
 {
-    DrawString(width/2, height/2 - 40, "PLAY", GetColor(255, 0, 0));
-    DrawPixel(0,0,GetColor(255,255,255));
+    int selected = 0;
+    SetFontSize(32);
 
-    ScreenFlip();
-
-    WaitKey();
+    while(ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0)
+    {
+        for(int i = 0; i < N_MENU; i++)
+        {
+            if(selected == i)
+            {
+                SetFontSize(40);
+                int str_w = GetDrawStringWidth(TitleStrings[i], strlen(TitleStrings[i]));
+                DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
+                SetFontSize(32);
+                continue;
+            }
+            int str_w = GetDrawStringWidth(TitleStrings[i], strlen(TitleStrings[i]));
+            DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
+        }
+        if(CheckHitKey(KEY_INPUT_UP))
+            selected = (selected - 1) % N_MENU;
+        if(CheckHitKey(KEY_INPUT_DOWN))
+            selected = (selected + 1) % N_MENU;
+    }
+    return 0;
 }

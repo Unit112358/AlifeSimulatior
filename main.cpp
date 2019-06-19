@@ -29,27 +29,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     byte mema[] = {JMP, 0};
     byte memb[] = {MOV_RI, RBX, 0, DEC, RBX, GETNUM_I, 50, AND_RR, RAX, RBX, NZJ, (byte)-5, GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP,  (byte)-12, EXIT, EXIT, EXIT, EXIT, EXIT};
     byte mem_biter[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-6};
+    byte mem_biter2[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, BITE, BITE, BITE, BITE, BITE, JMP, (byte)-11};
     byte mem_chaser[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5};
 
-    a->setMem(mem_biter, sizeof(mem_biter));
-    b->setMem(mem_biter, sizeof(mem_biter));
+    a->setMem(memb, sizeof(memb));
+    b->setMem(memb, sizeof(memb));
     c->setMem(mem_biter, sizeof(mem_biter));
     d->setMem(mem_biter, sizeof(mem_biter));
-    e->setMem(mem_biter, sizeof(mem_biter));
-    f->setMem(mem_biter, sizeof(mem_biter));
+    e->setMem(mem_biter2, sizeof(mem_biter2));
+    f->setMem(mem_biter2, sizeof(mem_biter2));
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
     while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)
     {
-        // a.addForce((200 - a.getX()), (200 - a.getY()));
-        // nann no bag ga arunnya
-        // eraseの引数としてイテレータを渡せるんだけど
-        //なぜかバグる
-        //だから今はkeyを渡すように実装してる
-        // iterator　を渡すようにしてもおいしいことなくない？
-        //discordを使え
-        //じゃあ変更してみるよ
-        //
         for(auto ite : Alife::alife_list)
         {
             Alife* p = ite.second;
