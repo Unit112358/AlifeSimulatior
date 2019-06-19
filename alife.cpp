@@ -17,11 +17,6 @@ CPU* new_cpu()
 
 bool Alife::update()
 {
-	if(energy < 0)
-	{
-		alife_list[id] = nullptr;
-		return false;
-	}
 	v_x *= attenuation_rate;
 	v_y *= attenuation_rate;
 	s_v_x *= attenuation_rate;
@@ -30,6 +25,7 @@ bool Alife::update()
 	act();
 	move();
 	draw();
+	if(energy < 0)return false;
 	return true;
 }
 
@@ -427,9 +423,10 @@ int Alife::getnear()
 	int id = -1;
 	double min_dist = 10000000000.0;
 
-	for(Alife* p : alife_list)
+	for(auto ite : alife_list)
 	{
-		if(p == nullptr || p->id == this->id) continue;
+		Alife* p = ite.second;
+		if(p->id == this->id) continue;
 		double dist = ((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
 		if(min_dist > dist)
 		{
@@ -447,9 +444,9 @@ int Alife::getnum_i()
 	int num = -1;
 	double dist = (double)cpu->rip[1];
 
-	for(Alife* p : alife_list)
+	for(auto ite : alife_list)
 	{
-		if(p == nullptr)continue;
+		Alife* p = ite.second;
 		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
 			num++;
 	}
@@ -464,9 +461,9 @@ int Alife::getnum_r()
 	int num = -1;
 	double dist = *RESISTER(cpu, cpu->rip[1]);
 
-	for(Alife* p : alife_list)
+	for(auto ite : alife_list)
 	{
-		if(p == nullptr)continue;
+		Alife* p = ite.second;
 		if((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y) <= dist * dist)
 			num++;
 	}
@@ -478,6 +475,7 @@ int Alife::getnum_r()
 int Alife::getdist_r()
 {
 	int id = *RESISTER(cpu, cpu->rip[1]);
+	if(alife_list.count(id) == 0)id = this->id;
 	cpu->rax = (int64)sqrt((alife_list[id]->x - x) * (alife_list[id]->x - x) + (alife_list[id]->y - y) * (alife_list[id]->y - y));
 	
 	return 2;
@@ -486,7 +484,7 @@ int Alife::getdist_r()
 int Alife::getvec_r()
 {
 	int id = *RESISTER(cpu, cpu->rip[1]);
-	if(id < 0 || alife_list.size() <= id) id = this->id;
+	if(alife_list.count(id) == 0) id = this->id;
 	int64 x = (int64)(alife_list[id]->x - this->x);
 	int y = (int)(alife_list[id]->y - this->y);
 
@@ -499,9 +497,9 @@ int Alife::bite()
 {
 	int id = -1;
 	double min_dist = 10000000000.0;
-	for(Alife* p : alife_list)
+	for(auto ite : alife_list)
 	{
-		if(p == nullptr || p->id == this->id)continue;
+		Alife *p = ite.second;
 		double dist = (p->x - x) * (p->x - x) + (p->y - y) * (p->y - y);
 		
 		#ifdef ALIFEDEBUG

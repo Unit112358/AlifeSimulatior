@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <cstdlib>
 #include <stdlib.h>
 #include <string.h>
@@ -126,7 +127,6 @@ private:
 	double tail_x[tail_length];
 	double tail_y[tail_length];
 	int tail_index = 0;
-	int id;
 
 public:
 	Alife(double x, double y) :x(x), y(y), energy(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
@@ -134,14 +134,14 @@ public:
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
 		id = num++;
-		alife_list.push_back(this);
+		alife_list[id] = this;
 	}
 	Alife(double x, double y, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
 		id = num++;
-		alife_list.push_back(this);
+		alife_list[id] = this;
 	}
 	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
 	//Alife(double x, double y, int energy, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(energy), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
@@ -159,7 +159,8 @@ public:
 	static int fps; 		// frame per second
 	static double spf; 		// second per frame
 	static int num;
-	static vector<Alife *> alife_list;
+	int id;
+	static map<int, Alife *> alife_list;
 
 
 	// CPU関連
@@ -202,6 +203,6 @@ public:
 int Alife::fps = 60;
 double Alife::spf = 1./60;
 int Alife::num = 0;
-vector<Alife*> Alife::alife_list;
+map<int, Alife*> Alife::alife_list;
 
 #include "alife.cpp"

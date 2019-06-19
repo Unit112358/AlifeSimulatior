@@ -42,10 +42,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)
     {
         // a.addForce((200 - a.getX()), (200 - a.getY()));
-        for(Alife* p : Alife::alife_list)
+        for(auto ite : Alife::alife_list)
         {
-            if(p == nullptr)continue;
-            if(!(p->update()))delete p;
+            Alife* p = ite.second;
+            if(!(p->update()))
+            {
+                p->id;
+                Alife::alife_list.erase(p->id);
+                delete p;
+            }
         }
     }
 
