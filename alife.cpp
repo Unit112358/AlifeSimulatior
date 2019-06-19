@@ -83,9 +83,9 @@ void Alife::draw()
 	}
 }
 
-inline int Alife::getVelocityX() { return s_v_x + v_x * spf; }
+inline double Alife::getVelocityX() { return s_v_x + v_x * spf; }
 
-inline int Alife::getVelocityY() { return s_v_y + v_y * spf; }
+inline double Alife::getVelocityY() { return s_v_y + v_y * spf; }
 
 void Alife::setFps(int a)
 {
@@ -387,7 +387,7 @@ int Alife::syscall()
 }
 
 
-inline void Alife::addForce(int accelaration_x, int accelaration_y)
+inline void Alife::addForce(double accelaration_x, double accelaration_y)
 {
 	v_x += accelaration_x;
 	v_y += accelaration_y;
@@ -425,11 +425,12 @@ int Alife::addfrc_r()
 int Alife::getnear()
 {
 	int id = -1;
-	uint min_dist = (uint)-1;
+	double min_dist = 10000000000.0;
+
 	for(Alife* p : alife_list)
 	{
 		if(p == nullptr || p->id == this->id) continue;
-		uint dist = (uint)((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
+		double dist = ((x - p->x) * (x - p->x) + (y - p->y) * (y - p->y));
 		if(min_dist > dist)
 		{
 			id = p->id;
@@ -444,7 +445,7 @@ int Alife::getnear()
 int Alife::getnum_i()
 {
 	int num = -1;
-	int dist = cpu->rip[1];
+	double dist = (double)cpu->rip[1];
 
 	for(Alife* p : alife_list)
 	{
@@ -461,7 +462,7 @@ int Alife::getnum_i()
 int Alife::getnum_r()
 {
 	int num = -1;
-	int dist = *RESISTER(cpu, cpu->rip[1]);
+	double dist = *RESISTER(cpu, cpu->rip[1]);
 
 	for(Alife* p : alife_list)
 	{
@@ -486,8 +487,8 @@ int Alife::getvec_r()
 {
 	int id = *RESISTER(cpu, cpu->rip[1]);
 	if(id < 0 || alife_list.size() <= id) id = this->id;
-	int64 x = alife_list[id]->x - this->x;
-	int y = alife_list[id]->y - this->y;
+	int64 x = (int64)(alife_list[id]->x - this->x);
+	int y = (int)(alife_list[id]->y - this->y);
 
 	cpu->rax = (x << 32) | y;
 
@@ -497,18 +498,18 @@ int Alife::getvec_r()
 int Alife::bite()
 {
 	int id = -1;
-	uint min_dist = (uint)-1;
+	double min_dist = 10000000000.0;
 	for(Alife* p : alife_list)
 	{
 		if(p == nullptr || p->id == this->id)continue;
-		uint dist = (uint)((p->x - x) * (p->x - x) + (p->y - y) * (p->y - y));
+		double dist = (p->x - x) * (p->x - x) + (p->y - y) * (p->y - y);
 		
 		#ifdef ALIFEDEBUG
 		ofs << "i: " << p->id << std::endl;
 		ofs << "min_dist: " << min_dist << " dist: " << dist << std::endl;
 		#endif
 
-		if(dist <= (uint)(size * size))
+		if(dist <= (double)(size * size))
 		{
 			if(min_dist > dist)
 			{
@@ -519,6 +520,8 @@ int Alife::bite()
 	}
 
 	if(id != -1)alife_list[id]->energy--;
+
+	
 
 	
 	#ifdef ALIFEDEBUG

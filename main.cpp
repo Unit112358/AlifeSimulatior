@@ -14,19 +14,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     Alife::setFps(60);
 
     Alife *a = new Alife(200, 200, 0, 0),
-          *b = new Alife(400, 200, 0, 0),
-          *biter = new Alife(400, 400, 0, 0);
+          *b = new Alife(300, 200, 0, 0),
+          *c = new Alife(400, 200, 0, 0),
+          *d = new Alife(200, 300, 0, 0),
+          *e = new Alife(300, 300, 0, 0),
+          *f = new Alife(400, 300, 0, 0);
     a->setColor(GetColor(255,0,0));
-    b->setColor(GetColor(255, 0, 0));
-    biter->setColor(GetColor(0,0,255));
+    b->setColor(GetColor(0,255,0));
+    c->setColor(GetColor(0,0,255));
+    d->setColor(GetColor(0,255,255));
+    e->setColor(GetColor(255,0,255));
+    f->setColor(GetColor(255,255,0));
 
     byte mema[] = {JMP, 0};
     byte memb[] = {MOV_RI, RBX, 0, DEC, RBX, GETNUM_I, 50, AND_RR, RAX, RBX, NZJ, (byte)-5, GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP,  (byte)-12, EXIT, EXIT, EXIT, EXIT, EXIT};
     byte mem_biter[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-6};
-    
-    a->setMem(mema, sizeof(mema));
-    b->setMem(mema, sizeof(mema));
-    biter->setMem(mem_biter, sizeof(mem_biter));
+    byte mem_chaser[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5};
+
+    a->setMem(mem_chaser, sizeof(mem_chaser));
+    b->setMem(mem_chaser, sizeof(mem_chaser));
+    c->setMem(mem_chaser, sizeof(mem_chaser));
+    d->setMem(mem_chaser, sizeof(mem_chaser));
+    e->setMem(mem_chaser, sizeof(mem_chaser));
+    f->setMem(mem_chaser, sizeof(mem_chaser));
     // メインループ
     // while( 裏画面を表画面に反映, メッセージ処理, 画面クリア )
     while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKeyAll() == 0)

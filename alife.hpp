@@ -111,32 +111,32 @@ typedef enum _instruction
 	BITE
 } instruction;
 
-constexpr double attenuation_rate = 0.99;
+constexpr double attenuation_rate = 0.995;
 const int tail_length = 10;
 
 class Alife
 {
 private:
-	int x, y;
-	int s_v_x, s_v_y;
-	int v_x, v_y;
+	double x, y;
+	double s_v_x, s_v_y;
+	double v_x, v_y;
 	int energy = 10;
-	int size = 10;
+	int size = 5;
 	int color;
-	int tail_x[tail_length];
-	int tail_y[tail_length];
+	double tail_x[tail_length];
+	double tail_y[tail_length];
 	int tail_index = 0;
 	int id;
 
 public:
-	Alife(int x, int y) :x(x), y(y), energy(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
+	Alife(double x, double y) :x(x), y(y), energy(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
 		id = num++;
 		alife_list.push_back(this);
 	}
-	Alife(int x, int y, int velocity_x, int velocity_y) :x(x), y(y), energy(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
+	Alife(double x, double y, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
@@ -150,11 +150,11 @@ public:
 	void move();
 	void draw();
 	void setColor(int color);
-	void addForce(int x, int y);
-	int getVelocityX();
-	int getVelocityY();
-	int getX() const {return x;}
-	int getY() const {return y;}
+	void addForce(double x, double y);
+	double getVelocityX();
+	double getVelocityY();
+	double getX() const {return x;}
+	double getY() const {return y;}
 	static void setFps(int a);
 	static int fps; 		// frame per second
 	static double spf; 		// second per frame
