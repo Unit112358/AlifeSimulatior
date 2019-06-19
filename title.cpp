@@ -55,7 +55,7 @@ int title(int width, int height)
             DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
         }
         if(CheckHitKey(KEY_INPUT_UP))
-            selected = (selected - 1) % N_MENU;
+            selected = (selected - 1 + N_MENU) % N_MENU;
         if(CheckHitKey(KEY_INPUT_DOWN))
             selected = (selected + 1) % N_MENU;
     }
