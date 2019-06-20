@@ -112,7 +112,8 @@ typedef enum _instruction
 	GETNUM_R,
 	GETDIST_R,
 	GETVEC_R,
-	BITE
+	BITE,
+	DIVISION_I
 } instruction;
 
 constexpr double attenuation_rate = 0.995;
@@ -124,7 +125,7 @@ private:
 	double x, y;
 	double s_v_x, s_v_y;
 	double v_x, v_y;
-	int energy = 10;
+	int life = 10;
 	int size = 5;
 	int color;
 	double tail_x[tail_length];
@@ -133,30 +134,39 @@ private:
 	int id;
 
 public:
-	Alife(double x, double y) :x(x), y(y), energy(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
+	Alife(double x, double y) :x(x), y(y), life(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
 		id = num++;
 		alife_list[id] = this;
 	}
-	Alife(double x, double y, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
+	Alife(double x, double y, double velocity_x, double velocity_y) :x(x), y(y), life(10), color(0), s_v_x(velocity_x), s_v_y(velocity_y), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
 	{
 		//if(!num) alife_list = new vector<Alife*>{this};
 		cpu = new_cpu();
 		id = num++;
 		alife_list[id] = this;
 	}
-	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
-	//Alife(double x, double y, int energy, double color, double velocity_x, double velocity_y) :x(x), y(y), energy(energy), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
+	/*
+	Alife(Alife* parent): x(parent->x), y(parent->y), life(10), color(parent->color), s_v_x(parent->s_v_x), s_v_y(parent->s_v_y), v_x(parent->v_x), v_y(parent->v_y) 
+	{
+		memcpy(tail_x, parent->tail_x, sizeof(parent->tail_x));
+		//memcpy(tail_y, parent->tail_y, tail_length);
+		//memcpy(tail_x, parent->tail_x, tail_length);
+	}
+	*/
+	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), life(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
+	//Alife(double x, double y, int life, double color, double velocity_x, double velocity_y) :x(x), y(y), life(life), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
 	~Alife() {free(mem);free(cpu);};
 	bool update();
 	void move();
 	void draw();
 	void setColor(int color);
 	void addForce(double x, double y);
-	double getVelocityX();
-	double getVelocityY();
+	int getColor() {return color;}
+	double getVelocityX();//{return v_x;}	
+	double getVelocityY();//{return v_y;}
 	double getX() const {return x;}
 	double getY() const {return y;}
 	static void setFps(int a);
@@ -167,9 +177,10 @@ public:
 	static std::map<int, Alife *> alife_list;
 
 
-	// CPU関連
+	//UI関連
 	CPU *cpu;
 	byte *mem;
+	uint memsize;
 
 	void setMem(byte*, uint size);
 
@@ -210,6 +221,7 @@ public:
 	int getdist_r();
 	int getvec_r();
 	int bite();
+	int division_i();
 };
 
 int Alife::fps = 60;

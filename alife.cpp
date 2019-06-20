@@ -25,7 +25,7 @@ bool Alife::update()
 	act();
 	move();
 	draw();
-	if(energy < 0)
+	if(life <= 0)
 		return false;
 	return true;
 }
@@ -96,6 +96,7 @@ void Alife::setMem(byte* mem, uint size)
 	memcpy(tmp, mem, size);
 	this->mem = tmp;
 	cpu->rip = tmp;
+	memsize = size;
 }
 
 void Alife::act()
@@ -415,6 +416,7 @@ int Alife::and_rr()
 
 	return 3;
 }
+
 int Alife::or_rr()
 {
 	byte dst, src;
@@ -713,7 +715,7 @@ int Alife::bite()
 		}
 	}
 
-	if(id != -1)alife_list[id]->energy--;
+	if(id != -1)alife_list[id]->life--;
 
 	
 
@@ -723,4 +725,19 @@ int Alife::bite()
 	#endif
 
 	return 1;
+}
+
+int Alife::division_i()
+{
+	int length = cpu->rip[1];
+	if(cpu->rip + 1 + length > mem + memsize)
+	{
+		life = 0;
+		return 0;
+	}
+	Alife *p = new Alife(this->x, this->y, getVelocityX(), getVelocityY());
+	p->setColor(getColor());
+	p->setMem(cpu->rip+2, length);
+	
+	return 1 + length;
 }
