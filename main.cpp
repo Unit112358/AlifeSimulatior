@@ -34,8 +34,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
     a->setMem(memb, sizeof(memb));
     b->setMem(memb, sizeof(memb));
-    c->setMem(mem_biter, sizeof(mem_biter));
-    d->setMem(mem_biter, sizeof(mem_biter));
+    c->setMem(mem_biter2, sizeof(mem_biter2));
+    d->setMem(mem_biter2, sizeof(mem_biter2));
     e->setMem(mem_biter2, sizeof(mem_biter2));
     f->setMem(mem_biter2, sizeof(mem_biter2));
     // メインループ

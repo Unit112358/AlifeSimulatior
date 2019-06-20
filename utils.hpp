@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdlib.h>
-#include "alife.hpp"
 
 
 #define LOWINT64(a) (int32)((a)&0xffffffff)
