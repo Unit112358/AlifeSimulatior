@@ -60,7 +60,7 @@ int title(int width, int height)
         if(CheckHitKey(KEY_INPUT_UP))
         {
             n_up++;
-            if(n_up%60 == 1)
+            if(n_up%10 == 1)
                 selected = (selected - 1 + N_MENU) % N_MENU;
         }
         else
