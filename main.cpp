@@ -2,7 +2,7 @@
 #include "Dxlib\DxLib.h"
 #include "alife.hpp"
 
-using namespace std;
+//using namespace std;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

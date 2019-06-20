@@ -18,7 +18,7 @@ typedef short int16;
 typedef char int8;
 typedef unsigned char byte;
 
-using namespace std;
+//using namespace std;
 // using byte = unsigned char;
 
 typedef union _flags
@@ -86,12 +86,15 @@ typedef enum _instruction
     MOV_RI,
     ADD_RR,
     ADD_RI,
-    SUB,
-    MUL,
-    DIV,
+    SUB_RR,
+    SUB_RI,
+    MUL_RR,
+    MUL_RI,
+    DIV_RR,
+    DIV_RI,
     AND_RR,
-    OR,
-    XOR,
+    OR_RR,
+    XOR_RR,
     INC,
     DEC,
 	CMP_RR,
@@ -161,7 +164,7 @@ public:
 	static double spf; 		// second per frame
 	static int num;
 	int getId() {return id;}
-	static map<int, Alife *> alife_list;
+	static std::map<int, Alife *> alife_list;
 
 
 	// CPU関連
@@ -180,7 +183,15 @@ public:
 	int mov_ri();	// レジスタに即値を代入する
 	int add_rr();
 	int add_ri();
+	int sub_rr();
+	int sub_ri();
+	int mul_rr();
+	int mul_ri();
+	int div_rr();
+	int div_ri();
 	int and_rr();
+	int or_rr();
+	int xor_rr();
 	int inc();
 	int dec();
 	int cmp_rr();
@@ -204,6 +215,6 @@ public:
 int Alife::fps = 60;
 double Alife::spf = 1./60;
 int Alife::num = 0;
-map<int, Alife*> Alife::alife_list;
+std::map<int, Alife*> Alife::alife_list;
 
 #include "alife.cpp"

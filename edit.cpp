@@ -22,10 +22,7 @@ int edit()
     for(int i = 1; i <= in_time; i++)
     {
         ClearDrawScreen();
-        DrawBox(180 / in_time * i - 179, 0, 180 / in_time * i, WINDOW_HEIGHT, GetColor(255, 0, 0), 0);
+        DrawBox(180 * i / in_time - 179, 0, 180 * i / in_time, WINDOW_HEIGHT, GetColor(255, 0, 0), 0);
         ScreenFlip();
     }
-    
-    DrawPixel(180, 100, GetColor(255,255,255));
-    ScreenFlip();
 }

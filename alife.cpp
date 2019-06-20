@@ -122,8 +122,32 @@ void Alife::act()
 		case ADD_RI:
 			next = add_ri();
 			break;
+		case SUB_RR:
+			next = sub_rr();
+			break;
+		case SUB_RI:
+			next = sub_ri();
+			break;
+		case MUL_RR:
+			next = mul_rr();
+			break;
+		case MUL_RI:
+			next = mul_ri();
+			break;
+		case DIV_RR:
+			next = div_rr();
+			break;
+		case DIV_RI:
+			next = div_ri();
+			break;
 		case AND_RR:
 			next = and_rr();
+			break;
+		case OR_RR:
+			next = or_rr();
+			break;
+		case XOR_RR:
+			next = xor_rr();
 			break;
 		case INC:
 			next = inc();
@@ -242,6 +266,135 @@ int Alife::add_ri()
     return 3;
 }
 
+int Alife::sub_rr()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) - *RESISTER(cpu, src);
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+	return 3;
+}
+int Alife::sub_ri()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) - src;
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+    return 3;
+}
+
+int Alife::mul_rr()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) * *RESISTER(cpu, src);
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+	return 3;
+}
+int Alife::mul_ri()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) * src;
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+    return 3;
+}
+
+int Alife::div_rr()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) / *RESISTER(cpu, src);
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+	return 3;
+}
+int Alife::div_ri()
+{
+    byte dst, src;
+
+    dst = cpu->rip[1];
+    src = cpu->rip[2];
+
+    *RESISTER(cpu, dst) = *RESISTER(cpu, dst) / src;
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+    return 3;
+}
+
 int Alife::and_rr()
 {
 	byte dst, src;
@@ -249,6 +402,47 @@ int Alife::and_rr()
 	src = cpu->rip[2];
 
 	*RESISTER(cpu, dst) = *RESISTER(cpu, dst) & *RESISTER(cpu, src);
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+	return 3;
+}
+int Alife::or_rr()
+{
+	byte dst, src;
+	dst = cpu->rip[1];
+	src = cpu->rip[2];
+
+	*RESISTER(cpu, dst) = *RESISTER(cpu, dst) | *RESISTER(cpu, src);
+
+	if(*RESISTER(cpu, dst) == 0)
+		cpu->flags.f.zero = 1;
+	else
+		cpu->flags.f.zero = 0;
+
+	if(*RESISTER(cpu, dst) < 0)
+		cpu->flags.f.sign = 1;
+	else
+		cpu->flags.f.sign = 0;
+
+	return 3;
+}
+
+int Alife::xor_rr()
+{
+	byte dst, src;
+	dst = cpu->rip[1];
+	src = cpu->rip[2];
+
+	*RESISTER(cpu, dst) = *RESISTER(cpu, dst) ^ *RESISTER(cpu, src);
 
 	if(*RESISTER(cpu, dst) == 0)
 		cpu->flags.f.zero = 1;
