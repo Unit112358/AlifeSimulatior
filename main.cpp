@@ -21,6 +21,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     GetMouseHWheelRotVol();
 
     int menuSelected = title();
+    returnDown++;
     if(menuSelected != PLAY)
         goto GAME_END;
 
@@ -35,6 +36,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
             mouseClick++;
         else
             mouseClick = 0;
+        if(CheckHitKey(KEY_INPUT_RETURN))
+            returnDown++;
+        else
+            returnDown = 0;
+
         
         int forcusedId = drawBattleField();
         

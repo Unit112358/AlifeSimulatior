@@ -10,6 +10,7 @@ int fontSize = 18;
 int d_scrl;
 int mouseX, mouseY;
 int mouseClick = 0;
+int returnDown = 0;
 
 enum
 {
@@ -246,7 +247,7 @@ bool drawMem(int forcusedId, int operation)
     DrawBox(l + box_width + box_border, WINDOW_HEIGHT - box_height + box_border, r - box_border, WINDOW_HEIGHT - box_border, GetColor(255,0,0), 1);
     // DrawString(l + box_width / 2, WINDOW_HEIGHT - box_height / 2, "+", 0xffffff);
 
-    if(CheckHitKey(KEY_INPUT_RETURN))return true;
+    if(returnDown == 1)return true;
     return false;
 }
 
