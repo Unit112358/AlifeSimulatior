@@ -792,12 +792,12 @@ int Alife::division_i()
 	Alife *p = new Alife(this->x + (GetRand(50) + 50) * (GetRand(1) ? 1 : -1), this->y + (GetRand(50)+50) * (GetRand(1)?1:-1), getVelocityX(), getVelocityY());
 	p->setColor(this->color);
 	p->setMem(cpu->rip+2, length);
-	cpu->stack[cpu->top++] = (int64)(cpu->rip + 1);
+	cpu->stack[cpu->top++] = (int64)(cpu->rip + 2 + length);
 	cpu->rcx = length * length;
 	static byte tmpmem[] = {NOP, LOOP, (byte)-1, RET};
 	cpu->rip = tmpmem;
 	
-	return 2 + length;
+	return 0;
 }
 
 int Alife::division()

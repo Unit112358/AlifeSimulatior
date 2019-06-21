@@ -35,7 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     byte mem_biter[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-6};
     byte mem_biter2[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, BITE, BITE, BITE, BITE, BITE, JMP, (byte)-11};
     byte mem_chaser[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, JMP, (byte)-5};
-    byte mem_mother[] = {DIVISION_I, 8, GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-3, NOP, NOP, NOP, NOP, JMP, (byte)-14};
+    byte mem_mother[] = {DIVISION_I, 8, GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-3, JMP, (byte)-10};
     byte mem_cell[] = {MOV_RI, RBX, (byte)2, GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, GETNUM_I, 200, CMP_RR, RAX, RBX, NSJ, (byte)-10, DIVISION, JMP, (byte)-13};
     byte mem_nonmove[] = {NOP, DIVISION, JMP, (byte)-1};
 
