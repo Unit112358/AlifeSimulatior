@@ -169,7 +169,7 @@ public:
 	*/
 	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), life(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
 	//Alife(double x, double y, int life, double color, double velocity_x, double velocity_y) :x(x), y(y), life(life), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
-	~Alife() {if(mem)free(mem);free(cpu);};
+	~Alife() {if(mem)free(mem);free(cpu);team_num[team]--;};
 	bool update();
 	void move();
 	void draw();
@@ -186,8 +186,9 @@ public:
 	static double spf; 		// second per frame
 	static int num;
 	static int energy[2];
+	static int team_num[2];
 	int getId() {return id;}
-	void setTeam(int team) {this->team = team;}
+	void setTeam(int team) {this->team = team;team_num[this->team]++;}
 	int getTeam() {return team;}
 	static std::map<int, Alife *> alife_list;
 
@@ -250,6 +251,7 @@ int Alife::fps = 60;
 double Alife::spf = 1./60;
 int Alife::num = 0;
 int Alife::energy[2] = {100, 100};
+int Alife::team_num[2] = {0,0};
 std::map<int, Alife*> Alife::alife_list;
 
 #include "alife.cpp"
