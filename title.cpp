@@ -12,7 +12,7 @@ int title(int width, int height);
 
 const TCHAR TitleStrings[][10] = {"PLAY", "SETTING", "QUIT"};
 
-#define TEST_TITLE
+// #define TEST_TITLE
 
 #ifdef TEST_TITLE
 const int scrWidth = 640;
@@ -60,7 +60,7 @@ int title(int width, int height)
         if(CheckHitKey(KEY_INPUT_UP))
         {
             n_up++;
-            if(n_up%10 == 1)
+            if(n_up%10 == 1 || n_up > 60)
                 selected = (selected - 1 + N_MENU) % N_MENU;
         }
         else
@@ -69,7 +69,7 @@ int title(int width, int height)
         if(CheckHitKey(KEY_INPUT_DOWN))
         {
             n_down++;
-            if(n_down%10 == 1)
+            if(n_down%10 == 1 || n_down > 60)
                 selected = (selected + 1) % N_MENU;
         }
         else

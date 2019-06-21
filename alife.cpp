@@ -73,6 +73,7 @@ void Alife::draw()
 	(++tail_index) %= tail_length;
 	tail_x[tail_index] = x;
 	tail_y[tail_index] = y;
+	
 
 	for (int i = 0, index = tail_index; i < tail_length; i++, index = (index - 1 + tail_length) % tail_length)
 	{
