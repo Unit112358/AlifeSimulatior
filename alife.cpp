@@ -217,6 +217,9 @@ void Alife::act()
 		case DIVISION:
 			next = division();
 			break;
+		case GENERATE:
+			next = generate();
+			break;
 		default:
 			next = 1;
 			break; 
@@ -812,4 +815,14 @@ int Alife::division()
 	cpu->rip = tmpmem;
 	
 	return 0;
+}
+
+int Alife::generate()
+{
+	Alife::energy[getTeam()] += 20;
+	int color = getColor();
+	if(((color & 0x00ff00) >> 8) >= 254)life = 0;
+	setColor(color + 0x000200);
+
+	return 1;
 }

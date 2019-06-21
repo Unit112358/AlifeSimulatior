@@ -244,6 +244,7 @@ bool drawMem(int forcusedId, int operation)
     DrawBox(l + box_width + box_border, WINDOW_HEIGHT - box_height + box_border, r - box_border, WINDOW_HEIGHT - box_border, GetColor(255,0,0), 1);
     DrawString(l + box_width / 2, WINDOW_HEIGHT - box_height / 2, "+", 0xffffff);
 
+    if(CheckHitKey(KEY_INPUT_RETURN))return true;
     return false;
 }
 

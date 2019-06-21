@@ -122,6 +122,7 @@ typedef enum _instruction
 	BITE,
 	DIVISION_I,
 	DIVISION,
+	GENERATE,
 	N_OPERATION
 } instruction;
 
@@ -242,6 +243,7 @@ public:
 	int bite();
 	int division_i();
 	int division();
+	int generate();
 };
 
 int Alife::fps = 60;
