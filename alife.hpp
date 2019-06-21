@@ -141,6 +141,7 @@ private:
 	double tail_y[tail_length];
 	int tail_index = 0;
 	int id;
+	int team;
 
 public:
 	Alife(double x, double y) :x(x), y(y), life(10), color(0), s_v_x(0), s_v_y(0), v_x(0), v_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y }
@@ -167,7 +168,7 @@ public:
 	*/
 	//Alife(double x, double y, double color, double velocity_x, double velocity_y) :x(x), y(y), life(10), color(0), velocity_x(0), velocity_y(0), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {};
 	//Alife(double x, double y, int life, double color, double velocity_x, double velocity_y) :x(x), y(y), life(life), color(color), velocity_x(velocity_x), velocity_y(velocity_y), tail_x{ x,x,x,x,x,x,x,x,x,x }, tail_y{ y,y,y,y,y,y,y,y,y,y } {}
-	~Alife() {free(mem);free(cpu);};
+	~Alife() {if(mem)free(mem);free(cpu);};
 	bool update();
 	void move();
 	void draw();
@@ -178,17 +179,21 @@ public:
 	double getVelocityY();//{return v_y;}
 	double getX() const {return x;}
 	double getY() const {return y;}
+	int getSize() {return size;}
 	static void setFps(int a);
 	static int fps; 		// frame per second
 	static double spf; 		// second per frame
 	static int num;
+	static int energy[2];
 	int getId() {return id;}
+	void setTeam(int team) {this->team = team;}
+	int getTeam() {return team;}
 	static std::map<int, Alife *> alife_list;
 
 
 	//UI関連
 	CPU *cpu;
-	byte *mem;
+	byte *mem = NULL;
 	uint memsize;
 
 	void setMem(byte*, uint size);
@@ -242,6 +247,7 @@ public:
 int Alife::fps = 60;
 double Alife::spf = 1./60;
 int Alife::num = 0;
+int Alife::energy[2] = {100, 100};
 std::map<int, Alife*> Alife::alife_list;
 
 #include "alife.cpp"

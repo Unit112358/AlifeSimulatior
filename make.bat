@@ -16,7 +16,7 @@ if NOT EXIST %filename%.cpp goto NOTFOUNDFILE
 
 g++ -o %filename%.exe %filename%.cpp %gpparg%
 %filename%.exe
-del %filename%.exe
+REM del %filename%.exe
 exit /B
 
 :NOTFOUNDFILE
