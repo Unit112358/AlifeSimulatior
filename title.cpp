@@ -1,4 +1,5 @@
 #include "DxLib\DxLib.h"
+#include "utils.hpp"
 
 enum
 {
@@ -34,7 +35,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #endif
 
 //進捗を生やす
-int title(int width, int height)
+int title()
 {
     int selected = 0;
     int n_up = 0;
@@ -50,12 +51,12 @@ int title(int width, int height)
             {
                 SetFontSize(40);
                 int str_w = GetDrawStringWidth(TitleStrings[i], strlen(TitleStrings[i]));
-                DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
+                DrawString((WINDOW_WIDTH - str_w)/2, WINDOW_HEIGHT/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
                 SetFontSize(32);
                 continue;
             }
             int str_w = GetDrawStringWidth(TitleStrings[i], strlen(TitleStrings[i]));
-            DrawString((width - str_w)/2, height/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
+            DrawString((WINDOW_WIDTH - str_w)/2, WINDOW_HEIGHT/2 - 200 + 100 * i, TitleStrings[i], GetColor(255, 0, 0));
         }
         if(CheckHitKey(KEY_INPUT_UP))
         {

@@ -5,49 +5,51 @@
 #include <map>
 #include <cmath>
 
-int fontSize = 20;
+int fontSize = 18;
 
-/*
+int d_scrl;
+int mouseX, mouseY;
+int mouseClick = 0;
+
 enum
 {
-	IMM = 0,
-	RAX,
-	RBX,
-	RCX,
-	RDX,
-	EXIT,
-	NOP,
-	MOV,
-	ADD,
-	SUB,
-	MUL,
-	DIV,
-	AND,
-	OR,
-	XOR,
-	INC,
-	DEC,
-	CMP,
-	LOOP,
-	JMP,
-	ZJ,
-	NZJ,
-	SJ,
-	NSJ,
-	POP,
-	PUSH,
-	RET,
-	ADDFRC,
-	GETNEAR,
-	GETNUM,
-	GETDIST,
-	GETVEC,
-	GETCLR,
-	BITE,
-	DIVISION,	
+	OP_IMM = 0,
+	OP_RAX,
+	OP_RBX,
+	OP_RCX,
+	OP_RDX,
+	OP_EXIT,
+	OP_NOP,
+	OP_MOV,
+	OP_ADD,
+	OP_SUB,
+	OP_MUL,
+	OP_DIV,
+	OP_AND,
+	OP_OR,
+	OP_XOR,
+	OP_INC,
+	OP_DEC,
+	OP_CMP,
+	OP_LOOP,
+	OP_JMP,
+	OP_ZJ,
+	OP_NZJ,
+	OP_SJ,
+	OP_NSJ,
+	OP_POP,
+	OP_PUSH,
+	OP_RET,
+	OP_ADDFRC,
+	OP_GETNEAR,
+	OP_GETNUM,
+	OP_GETDIST,
+	OP_GETVEC,
+	OP_GETCLR,
+	OP_BITE,
+	OP_DIVISION,	
 	N_OP
 };
-*/
 
 TCHAR operationStrings[][20] = 
 {
@@ -90,40 +92,22 @@ TCHAR operationStrings[][20] =
 
 int edit();
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-    ChangeWindowMode(TRUE);
-	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 16);       // ウィンドウモード変更
-    DxLib_Init();                  // 初期化
-    SetDrawScreen(DX_SCREEN_BACK); //裏画面設定
-
-    edit();
-
-    WaitKey();
-    DxLib_End();
-}
-
 int drawBattleField()
 {
-    int Mouse_X, Mouse_Y;
-    int input;
     static int forcusedId = -1;
 
     DrawBox(0, 0, 180, 600, GetColor(255, 0, 0), 0);
     DrawBox(720, 0, 900, 600, GetColor(0, 0, 255), 0);
-
-    GetMousePoint(&Mouse_X, &Mouse_Y);
-    input = GetMouseInput();
     
-    if(input & MOUSE_INPUT_LEFT)
+    if(mouseClick == 1)
     {
-        if(0 <= Mouse_X && Mouse_X <= 180 || 720 <= Mouse_X && Mouse_X <= WINDOW_WIDTH)
+        if(0 <= mouseX && mouseX <= 180 || 720 <= mouseX && mouseX <= WINDOW_WIDTH)
         {
             bool update = false;
             for(auto ite : Alife::alife_list)
             {
-                int x = ite.second->getX() - Mouse_X;
-                int y = ite.second->getY() - Mouse_Y;
+                int x = ite.second->getX() - mouseX;
+                int y = ite.second->getY() - mouseY;
                 int d = ite.second->getSize();
                 if(x * x + y * y <= 4 * d * d)
                 {
@@ -131,11 +115,11 @@ int drawBattleField()
                     update = true;
                 }
             }
-            if(!update && 0 <= Mouse_Y && Mouse_Y <= WINDOW_HEIGHT)
+            if(!update && 0 <= mouseY && mouseY <= WINDOW_HEIGHT)
             {
-                Alife *tmp = new Alife(Mouse_X, Mouse_Y);
+                Alife *tmp = new Alife(mouseX, mouseY);
                 forcusedId = tmp->getId();
-                if(Mouse_X <= 180)
+                if(mouseX <= 180)
                 {
                     tmp->setTeam(0);
                     tmp->setColor(GetColor(255, 0, 0));
@@ -190,12 +174,8 @@ bool drawMem(int forcusedId, int operation)
 
     static int prevId = -1;
 
-    static std::map<int, std::vector<byte>> mem_list;
+    static std::map<int, std::vector<int>> mem_list;
 
-    int dscrl = GetMouseWheelRotVol();
-    int input = GetMouseInput();
-    int mouse_X, mouse_Y;
-    GetMousePoint(&mouse_X, &mouse_Y);
 
     if(prevId != forcusedId)
     {
@@ -205,15 +185,16 @@ bool drawMem(int forcusedId, int operation)
 
     if(forcusedId != -1)
     {
-        if(mem_list.count(forcusedId) == 0)mem_list[forcusedId] = std::vector<byte>({NOP});
+        if(mem_list.count(forcusedId) == 0)mem_list[forcusedId] = std::vector<int>({OP_NOP});
 
         //DrawBox(181, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT, GetColor(255,255,0), 1);
 
-        scrl -= 2 * dscrl;
+        if(l <= mouseX && mouseX <= r && 0 <= mouseY && mouseY <= WINDOW_HEIGHT)
+            scrl -= 2 * d_scrl;
         if(scrl < 0)scrl = 0;
         if(scrl > std::max(0, (int)(mem_list[forcusedId].size()) * box_height - WINDOW_HEIGHT)) scrl = std::max(0, (int)(mem_list[forcusedId].size()) * box_height - WINDOW_HEIGHT);
 
-        if(input & MOUSE_INPUT_LEFT && l + box_border <= mouse_X && mouse_X <= l + box_width - box_border && WINDOW_HEIGHT - box_height + box_border <= mouse_Y && mouse_Y <= WINDOW_HEIGHT - box_border)
+        if(mouseClick == 1 && l + box_border <= mouseX && mouseX <= l + box_width - box_border && WINDOW_HEIGHT - box_height + box_border <= mouseY && mouseY <= WINDOW_HEIGHT - box_border)
         {
             if(mem_list[forcusedId].size())
             {
@@ -222,7 +203,7 @@ bool drawMem(int forcusedId, int operation)
                 if(forcusedMem >= mem_list[forcusedId].size())forcusedMem = -1;
             }
         }
-        else if(input & MOUSE_INPUT_LEFT && l + box_width + box_border <= mouse_X && mouse_X <= r - box_border && WINDOW_HEIGHT - box_height + box_border <= mouse_Y && mouse_Y <= WINDOW_HEIGHT - box_border)
+        else if(mouseClick == 1 && l + box_width + box_border <= mouseX && mouseX <= r - box_border && WINDOW_HEIGHT - box_height + box_border <= mouseY && mouseY <= WINDOW_HEIGHT - box_border)
         {
             if(mem_lim[Alife::alife_list[forcusedId]->getTeam()] != 0)
             {
@@ -230,24 +211,33 @@ bool drawMem(int forcusedId, int operation)
                 mem_lim[Alife::alife_list[forcusedId]->getTeam()]--;
             }
         }
-        else if(input & MOUSE_INPUT_LEFT && l + border <= mouse_X && mouse_X <= r - border && border <= mouse_Y && mouse_Y <= WINDOW_HEIGHT)
+        else if(mouseClick == 1 && l + border <= mouseX && mouseX <= r - border && border <= mouseY && mouseY <= WINDOW_HEIGHT)
         {
-            forcusedMem = (mouse_Y - border) / mem_height;
+            forcusedMem = (mouseY + scrl) / mem_height;
             if(forcusedMem >= mem_list[forcusedId].size())forcusedMem = -1;
         }
 
         //draw mem
         for(int i = 0; i < (int)(mem_list[forcusedId].size()); i++)
         {
-            byte crr = mem_list[forcusedId][i];
-            int width = GetDrawStringWidth(operationStrings[crr], strlen(operationStrings[crr]));
+            int crr = mem_list[forcusedId][i];
+            TCHAR tmpstr[20];
+            if(crr < 0)
+                sprintf(tmpstr, "%d", ~crr);
+            TCHAR* str;
+            if(crr < 0)
+                str = tmpstr;
+            else
+                str = operationStrings[crr];
+            
+            int width = GetDrawStringWidth(str, strlen(str));
             DrawBox(l + border, -scrl + i * mem_height + border, r - border, -scrl + (i + 1) * mem_height - border, GetColor(255,255,255),0);
             if(forcusedMem == i)DrawBox(l + border, -scrl + i * mem_height + border, r - border, -scrl + (i + 1) * mem_height - border, GetColor(0,255,0),0);
-            DrawString((l + r - width) / 2, -scrl + i * mem_height + (mem_height - fontSize) / 2, operationStrings[crr], GetColor(255,255,255), GetColor(255,255,255));
+            DrawString((l + r - width) / 2, -scrl + i * mem_height + (mem_height - fontSize) / 2, str, GetColor(255,255,255), GetColor(255,255,255));
         }
     }
 
-    if(forcusedMem != -1)mem_list[forcusedId][forcusedMem] = operation;
+    if(operation != 0 && forcusedMem != -1)mem_list[forcusedId][forcusedMem] = operation;
 
     //draw - +
     DrawBox(l + box_border, WINDOW_HEIGHT - box_height + box_border, l + box_width - box_border, WINDOW_HEIGHT - box_border, GetColor(0,0,255), 1);
@@ -272,10 +262,75 @@ int edit()
 
     while(ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && CheckHitKey(KEY_INPUT_Z) == 0)
     {
+        d_scrl = GetMouseWheelRotVol();
+        GetMousePoint(&mouseX, &mouseY);
+        if(GetMouseInput() && MOUSE_INPUT_LEFT)
+            mouseClick++;
+        else
+            mouseClick = 0;
+        
         int forcusedId = drawBattleField();
         
         int operation/* = drawOperation()*/ = 0;
 
         bool isFinish = drawMem(forcusedId, operation);
     }
+}
+
+int drawOperations()
+{
+	static int scrl = 0;
+
+	static const int l = WINDOW_WIDTH / 2;
+	static const int r = WINDOW_WIDTH - WINDOW_WIDTH / 5;
+	static const int border = 2;
+
+	static const int box_height = 40;
+
+
+	// Global
+	// static int d_scrl;
+	// static int mouseX, mouseY;
+	// static int mouseClick = 0;
+	// d_scrl = GetMouseWheelRotVol();
+	// GetMousePoint(&mouseX, &mouseY);
+	// if (GetMouseInput())
+	// 	mouseClick++;
+	// else
+	// 	mouseClick = 0;
+
+	if(mouseX > l && mouseX < r)//?&& mouseY > 0 && mouseY < WINDOW_HEIGHT)
+		scrl -= 2 * d_scrl;
+	if(scrl < 0) scrl = 0;
+	if(scrl > N_OP * box_height - WINDOW_HEIGHT) scrl = N_OP * box_height - WINDOW_HEIGHT;
+
+	DrawBox(l, 0, r, WINDOW_HEIGHT, 0x42A0A0, 1);
+
+	for(int i = 0; i < N_OP; i++)
+	{
+		int width = GetDrawStringWidth(operationStrings[i], strlen(operationStrings[i]));
+		DrawBox(l + border, -scrl + border, r - border, -scrl + (i + 1) * box_height - border ,0xA042A0, 0);
+		DrawString((l + r - width) / 2, -scrl + i * box_height + (box_height - fontSize) / 2, operationStrings[i], GetColor(0xff, 0, 0), 0xA0A042);
+	}
+
+	if(mouseX > l && mouseX < r)
+	{
+		if(mouseClick == 1)
+		{
+			int ret = (scrl + mouseY) / box_height;
+			if(ret == 0)
+			{
+				//数値を読む関数を呼ぶ
+				SetFontSize(64);
+				ret = KeyInputNumber(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 64, 255, -128, 1);
+				SetFontSize(fontSize);
+				if(ret == 256) return 0;
+				if(ret == -129) return 0;
+				return ~(byte)ret;
+			}
+			return ret;
+		}
+	}
+
+	return 0;
 }
