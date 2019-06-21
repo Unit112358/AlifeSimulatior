@@ -47,7 +47,8 @@ enum
 	OP_GETVEC,
 	OP_GETCLR,
 	OP_BITE,
-	OP_DIVISION,	
+	OP_DIVISION,
+    OP_GENERATE,	
 	N_OP
 };
 
@@ -87,7 +88,8 @@ TCHAR operationStrings[][20] =
 	"Get vector",
 	"Get color",
 	"Bite",
-	"Duplicate"
+	"Duplicate",
+    "Generate"
 };
 
 int edit();
@@ -242,7 +244,7 @@ bool drawMem(int forcusedId, int operation)
     //draw - +
     DrawBox(l + box_border, WINDOW_HEIGHT - box_height + box_border, l + box_width - box_border, WINDOW_HEIGHT - box_border, GetColor(0,0,255), 1);
     DrawBox(l + box_width + box_border, WINDOW_HEIGHT - box_height + box_border, r - box_border, WINDOW_HEIGHT - box_border, GetColor(255,0,0), 1);
-    DrawString(l + box_width / 2, WINDOW_HEIGHT - box_height / 2, "+", 0xffffff);
+    // DrawString(l + box_width / 2, WINDOW_HEIGHT - box_height / 2, "+", 0xffffff);
 
     if(CheckHitKey(KEY_INPUT_RETURN))return true;
     return false;
