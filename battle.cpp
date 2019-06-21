@@ -8,38 +8,6 @@
 
 int battle();
 
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-    AllocConsole();FILE* out = 0; freopen_s( &out, "CON", "w", stdout );
-	printf("Program has started.\n");
-    
-    ChangeWindowMode(TRUE);
-	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 16);      // ウィンドウモード変更
-    DxLib_Init();                  // 初期化
-    SetDrawScreen(DX_SCREEN_BACK); //裏画面設定
-    SetFontSize(20);
-
-    Alife *a = new Alife(100, 100), *b = new Alife(300, 300);
-
-    a->setColor(GetColor(255,0,0));
-    a->setTeam(0);
-    b->setColor(GetColor(0,0,255));
-    b->setTeam(1);
-
-    byte chaser[] = {GETNEAR, ADDFRC_R, RAX, JMP, (byte)-3};
-    byte mem_biter[] = {GETNEAR, GETVEC_R, RAX, ADDFRC_R, RAX, BITE, JMP, (byte)-6};
-
-    a->setMem(mem_biter, sizeof(mem_biter));
-    b->setMem(mem_biter, sizeof(mem_biter));
-
-    while(ProcessMessage() == 0 && CheckHitKeyAll() == 0)
-    {
-        ClearDrawScreen();
-        battle();
-        ScreenFlip();
-    }
-}
-
 void drawEnergy(int energy, bool left)
 {
     int tmp = energy, n = 0;

@@ -3,6 +3,7 @@
 #include "alife.hpp"
 #include "title.cpp"
 #include "edit.cpp"
+#include "battle.cpp"
 #include <ctime>
 
 //using namespace std;
@@ -43,28 +44,25 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
         
         int forcusedId = drawBattleField();
-        
+        printf("a\n");
         int operation = drawOperations();
-
+        printf("b\n");
         bool isFinish = drawMem(forcusedId, operation);
-
+        printf("c\n");
         if(isFinish)
             break;
-
+        printf("d\n");
         ScreenFlip();
     }
 
-    while (ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0)
+    printf("e\n");
+
+    while (ProcessMessage() == 0)
     {
-        for(auto ite : Alife::alife_list)
-        {
-            Alife* p = ite.second;
-            if(!(p->update()))
-            {
-                Alife::alife_list.erase(p->getId());
-                delete p;
-            }
-        }
+        printf("f\n");  
+        ClearDrawScreen();
+        battle();
+        ScreenFlip();
     }
 
     GAME_END:

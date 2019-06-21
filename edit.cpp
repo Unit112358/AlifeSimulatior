@@ -1,3 +1,4 @@
+#pragma once
 #include "DxLib\DxLib.h"
 #include "utils.hpp"
 #include "alife.hpp"
@@ -92,6 +93,228 @@ TCHAR operationStrings[][20] =
 	"Duplicate",
     "Generate"
 };
+
+std::vector<byte> assembly(std::vector<int> v)
+{
+    std::vector<byte> ret;
+
+    for(int i = 0;i < v.size(); i++)
+    {
+        if(v[i] < 0)
+        {
+            ret.push_back((byte)(-v[i]-1));
+            continue;
+        }
+        byte pushee;
+        switch(v[i])
+        {
+            case OP_RAX:
+                pushee = RAX;
+                break;
+            case OP_RBX:
+                pushee = RBX;
+                break;
+            case OP_RCX:
+                pushee = RCX;
+                break;
+            case OP_RDX:
+                pushee = RDX;
+                break;
+            case OP_EXIT:
+                pushee = EXIT;
+                break;
+            case OP_NOP:
+                pushee = NOP;
+                break;
+            case OP_MOV:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(v[i+2] < 0)
+                    pushee = MOV_RI;
+                else if(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX)
+                    pushee = MOV_RR;
+                else
+                    goto error;
+                break;
+            case OP_ADD:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(v[i+2] < 0)
+                    pushee = ADD_RI;
+                else if(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX)
+                    pushee = ADD_RR;
+                else
+                    goto error;
+                break;
+            case OP_SUB:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(v[i+2] < 0)
+                    pushee = SUB_RI;
+                else if(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX)
+                    pushee = SUB_RR;
+                else
+                    goto error;
+                break;
+            case OP_MUL:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(v[i+2] < 0)
+                    pushee = MUL_RI;
+                else if(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX)
+                    pushee = MUL_RR;
+                else
+                    goto error;
+                break;
+            case OP_DIV:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(v[i+2] < 0)
+                    pushee = DIV_RI;
+                else if(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX)
+                    pushee = DIV_RR;
+                else
+                    goto error;
+                break;
+            case OP_AND:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(!(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX))
+                    goto error;
+                pushee = AND_RR;
+                break;
+            case OP_OR:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(!(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX))
+                    goto error;
+                pushee == OR_RR;
+                break;
+            case OP_XOR:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(!(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX))
+                    goto error;
+                pushee = XOR_RR;
+                break;
+            case OP_INC:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                pushee = INC;
+                break;
+            case OP_DEC:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                pushee = DEC;
+                break;
+            case OP_CMP:
+                if(!(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX))
+                    goto error;
+                if(!(v[i+2] >= OP_RAX && v[i+2] <= OP_RDX))
+                    goto error;
+                pushee = CMP_RR;
+                break;
+            case OP_LOOP:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = LOOP;
+                break;
+            case OP_JMP:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = JMP;
+                break;
+            case OP_ZJ:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = ZJ;
+                break;
+            case OP_NZJ:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = NZJ;
+                break;
+            case OP_SJ:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = SJ;
+                break;
+            case OP_NSJ:
+                if(!(v[i+1] < 0))
+                    goto error;
+                pushee = NSJ;
+                break;
+            case OP_POP:
+                pushee = NOP;
+                break;
+            case OP_PUSH:
+                pushee = NOP;
+                break;
+            case OP_RET:
+                pushee = RET;
+                break;
+            case OP_ADDFRC:
+                if(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX)
+                    pushee = ADDFRC_R;
+                else if (v[i+1] < 0 && v[i+2] < 0)
+                    pushee = ADDFRC_II;
+                else
+                    goto error;
+                break;
+            case OP_GETNEAR:
+                pushee = GETNEAR;
+                break;
+            case OP_GETNUM:
+                if(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX)
+                    pushee = GETNUM_R;
+                else if(v[i+1] < 0)
+                    pushee = GETNUM_I;
+                else
+                    goto error;
+                break;
+            case OP_GETDIST:
+                if(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX)
+                    pushee = GETDIST_R;
+                else
+                    goto error;
+                break;
+            case OP_GETVEC:
+                if(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX)
+                    pushee = GETVEC_R;
+                else
+                    goto error;
+                break;
+            case OP_GETCLR:
+                if(v[i+1] >= OP_RAX && v[i+1] <= OP_RDX)
+                    pushee = GETCOLOR_R;
+                else
+                    goto error;
+                break;          
+            case OP_BITE:
+                pushee = BITE;
+                break;
+            case OP_DIVISION:
+                if(v[i+1] < 0)                
+                    pushee = DIVISION_I;
+                else
+                    pushee = DIVISION;                    
+                break;                            
+            case OP_GENERATE:
+                pushee = GENERATE;
+                break;       
+            default:
+                printf("eeeee\n");
+                exit(0);
+        }
+        ret.push_back(pushee);
+    }
+    return ret;
+
+    error:
+    printf("syntax error\n");
+    WaitKey();
+    exit(0);
+}
 
 int edit();
 
@@ -193,7 +416,7 @@ bool drawMem(int forcusedId, int operation)
         //DrawBox(181, 0, WINDOW_WIDTH / 2, WINDOW_HEIGHT, GetColor(255,255,0), 1);
 
         if(l <= mouseX && mouseX <= r && 0 <= mouseY && mouseY <= WINDOW_HEIGHT)
-            scrl -= 2 * d_scrl;
+            scrl -= 4 * d_scrl;
         if(scrl < 0)scrl = 0;
         if(scrl > std::max(0, (int)(mem_list[forcusedId].size()) * box_height - WINDOW_HEIGHT)) scrl = std::max(0, (int)(mem_list[forcusedId].size()) * box_height - WINDOW_HEIGHT);
 
@@ -243,12 +466,18 @@ bool drawMem(int forcusedId, int operation)
     if(operation != 0 && forcusedMem != -1)mem_list[forcusedId][forcusedMem] = operation;
 
     //draw - +
-    DrawBox(l + box_border, WINDOW_HEIGHT - box_height + box_border, l + box_width - box_border, WINDOW_HEIGHT - box_border, GetColor(0,0,255), 1);
-    DrawBox(l + box_width + box_border, WINDOW_HEIGHT - box_height + box_border, r - box_border, WINDOW_HEIGHT - box_border, GetColor(255,0,0), 1);
+    DrawBox(l + box_border, WINDOW_HEIGHT - box_height + box_border, l + box_width - box_border, WINDOW_HEIGHT - box_border, GetColor(255,0,0), 1);
+    DrawBox(l + box_width + box_border, WINDOW_HEIGHT - box_height + box_border, r - box_border, WINDOW_HEIGHT - box_border, GetColor(0,0,255), 1);
     // DrawString(l + box_width / 2, WINDOW_HEIGHT - box_height / 2, "+", 0xffffff);
 
     if(returnDown == 1)
     {
+        for(auto ite : mem_list)
+        {
+            ite.second.push_back(OP_EXIT);
+            std::vector<byte> vec = assembly(ite.second);
+            Alife::alife_list[ite.first]->setMem(vec);
+        }
         return true;
     }
     return false;
@@ -307,7 +536,7 @@ int drawOperations()
 	// 	mouseClick = 0;
 
 	if(mouseX > l && mouseX < r)//?&& mouseY > 0 && mouseY < WINDOW_HEIGHT)
-		scrl -= 2 * d_scrl;
+		scrl -= 4 * d_scrl;
 	if(scrl < 0) scrl = 0;
 	if(scrl > N_OP * box_height - WINDOW_HEIGHT) scrl = N_OP * box_height - WINDOW_HEIGHT;
 
@@ -333,6 +562,7 @@ int drawOperations()
 				SetFontSize(fontSize);
 				if(ret == 256) return 0;
 				if(ret == -129) return 0;
+                returnDown+=2;
 				return ~(byte)ret;
 			}
 			return ret;

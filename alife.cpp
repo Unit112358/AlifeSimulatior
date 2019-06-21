@@ -122,7 +122,7 @@ void Alife::act()
 	switch(*cpu->rip)
 	{
 		case EXIT:
-		// 終了処理
+			life = 0;
 			break;
 		case NOP:
 			next = nop();
@@ -588,6 +588,10 @@ int Alife::jmp()
     byte dst;
     dst = cpu->rip[1];
 
+	#ifdef ALIFEDEBUG
+	ofs << "dst : "<< (int)((signed char)dst) << std::endl;
+	#endif
+
     return (signed char)dst;
 }
 
@@ -671,7 +675,7 @@ int Alife::addfrc_ii()
 	x = cpu->rip[1];
 	y = cpu->rip[2];
 
-	addForce(x, y);
+	if(((getColor() & 0x00ff00) >> 8) == 0)addForce(x, y);
 
 	return 3;
 }
@@ -682,7 +686,8 @@ int Alife::addfrc_r()
 
 	vec = *RESISTER(cpu, cpu->rip[1]);
 
-	addForce(vec_x(vec), vec_y(vec));
+
+	if(((getColor() & 0x00ff00) >> 8) == 0)addForce(vec_x(vec), vec_y(vec));
 
 	return 2;
 }
