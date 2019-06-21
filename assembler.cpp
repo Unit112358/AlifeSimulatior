@@ -3,16 +3,6 @@
 #include "alife.hpp"
 #include <vector>
 
-void Alife::setMem(std::vector<byte> v)
-{
-	byte* tmp = (byte*)malloc(v.size());
-	for(int i = 0; i < v.size(); i++)
-        tmp[i] = v[i];
-	this->mem = tmp;
-	cpu->rip = tmp;
-	memsize = v.size();
-}
-
 std::vector<byte> assembly(std::vector<int> v)
 {
     std::vector<byte> ret;
@@ -232,5 +222,4 @@ std::vector<byte> assembly(std::vector<int> v)
     error:
     printf("syntax error\n");
     exit(0);
-    return ;
 }

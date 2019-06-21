@@ -93,11 +93,23 @@ void Alife::setFps(int a)
 
 void Alife::setMem(byte* mem, uint size)
 {
+	if(this->mem) free(mem);
 	byte* tmp = (byte*)malloc(size);
 	memcpy(tmp, mem, size);
 	this->mem = tmp;
 	cpu->rip = tmp;
 	memsize = size;
+}
+
+void Alife::setMem(std::vector<byte> v)
+{
+	if(this->mem) free(mem);
+	byte* tmp = (byte*)malloc(v.size());
+	for(int i = 0; i < v.size(); i++)
+        tmp[i] = v[i];
+	this->mem = tmp;
+	cpu->rip = tmp;
+	memsize = v.size();
 }
 
 void Alife::act()

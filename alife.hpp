@@ -199,6 +199,8 @@ public:
 	uint memsize;
 
 	void setMem(byte*, uint size);
+	void setMem(std::vector<byte> v);
+
 
 	void fetch(); 			// バイトコードをメモリから一つとる関数
 	void decode(); 			// バイトコードから命令にデコードする関数
