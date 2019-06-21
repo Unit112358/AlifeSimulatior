@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <map>
+#include <stack>
 #include <cstdlib>
 #include <stdlib.h>
 #include <string.h>
@@ -53,6 +54,7 @@ typedef struct _cpu
 
     flags flags;
 
+	int top = 0;
     int64 stack[10];
 }CPU;
 
@@ -82,6 +84,7 @@ CPU* new_cpu();
 typedef enum _instruction
 {
     EXIT = 0,
+	NOP,
     MOV_RR,
     MOV_RI,
     ADD_RR,
@@ -102,8 +105,11 @@ typedef enum _instruction
     JMP,
     ZJ,
     NZJ,
+	SJ,
+	NSJ,
     POP,
     PUSH,
+	RET,
     SYSCALL,
 	ADDFRC_II,
 	ADDFRC_R,
@@ -112,8 +118,11 @@ typedef enum _instruction
 	GETNUM_R,
 	GETDIST_R,
 	GETVEC_R,
+	GETCOLOR_R,
 	BITE,
-	DIVISION_I
+	DIVISION_I,
+	DIVISION,
+	N_OPERATION
 } instruction;
 
 constexpr double attenuation_rate = 0.995;
@@ -190,6 +199,7 @@ public:
 	void act();				// 上３つ分の関数
 
 	// 命令群
+	int nop();
 	int mov_rr();	// レジスタにレジスタから値をコピーする
 	int mov_ri();	// レジスタに即値を代入する
 	int add_rr();
@@ -210,6 +220,9 @@ public:
 	int jmp();
 	int zj();
 	int nzj();
+	int sj();
+	int nsj();
+	int ret();
 
 	int syscall();
 
@@ -220,8 +233,10 @@ public:
 	int getnum_r();
 	int getdist_r();
 	int getvec_r();
+	int getcolor_r();
 	int bite();
 	int division_i();
+	int division();
 };
 
 int Alife::fps = 60;

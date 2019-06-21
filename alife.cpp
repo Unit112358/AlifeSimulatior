@@ -111,6 +111,9 @@ void Alife::act()
 		case EXIT:
 		// 終了処理
 			break;
+		case NOP:
+			next = nop();
+			break;
 		case MOV_RR:
 			next = mov_rr();
 			break;
@@ -165,6 +168,21 @@ void Alife::act()
 		case JMP:
 			next = jmp();
 			break;
+		case ZJ:
+			next = zj();
+			break;
+		case NZJ:
+			next = nzj();
+			break;
+		case SJ:
+			next = sj();
+			break;
+		case NSJ:
+			next = nsj();
+			break;
+		case RET:
+			next = ret();
+			break;
 		case ADDFRC_II:
 			next = addfrc_ii();
 			break;
@@ -186,8 +204,17 @@ void Alife::act()
 		case GETVEC_R:
 			next = getvec_r();
 			break;
+		case GETCOLOR_R:
+			next = getcolor_r();
+			break;
 		case BITE:
 			next = bite();
+			break;
+		case DIVISION_I:
+			next = division_i();
+			break;
+		case DIVISION:
+			next = division();
 			break;
 		default:
 			next = 1;
@@ -198,6 +225,11 @@ void Alife::act()
 	#endif
 
 	cpu->rip += next;
+}
+
+int Alife::nop()
+{
+	return 1;
 }
 
 int Alife::mov_rr()
@@ -517,6 +549,8 @@ int Alife::cmp_rr()
 		cpu->flags.f.sign = 1;
 	else
 		cpu->flags.f.sign = 0;
+
+	return 3;
 }
 
 int Alife::loop()
@@ -558,6 +592,33 @@ int Alife::nzj()
 	if(!cpu->flags.f.zero)
 		return (signed char)dst;
 	return 2;
+}
+
+int Alife::sj()
+{
+	byte dst;
+	dst = cpu->rip[1];
+	
+	if(cpu->flags.f.sign)
+		return (signed char)dst;
+	return 2;
+}
+
+int Alife::nsj()
+{
+	byte dst;
+	dst = cpu->rip[1];
+	
+	if(!cpu->flags.f.sign)
+		return (signed char)dst;
+	return 2;
+}
+
+int Alife::ret()
+{
+	cpu->rip = (byte*)(cpu->stack[--(cpu->top)]);
+
+	return 0;
 }
 
 int Alife::syscall()
@@ -604,11 +665,6 @@ int Alife::addfrc_r()
 	int64 vec;
 
 	vec = *RESISTER(cpu, cpu->rip[1]);
-
-	#ifdef ALIFEDEBUG
-	ofs << "vec: " << vec << std::endl;
-	ofs << "x: " << vec_x(vec) << " y: " << vec_y(vec) << std::endl;
-	#endif
 
 	addForce(vec_x(vec), vec_y(vec));
 
@@ -690,6 +746,16 @@ int Alife::getvec_r()
 	return 2;
 }
 
+int Alife::getcolor_r()
+{
+	int id = *RESISTER(cpu, cpu->rip[1]);
+
+	if(alife_list.count(id) == 0) id = this->id;
+	cpu->rax = alife_list[id]->color;
+
+	return 2;
+}
+
 int Alife::bite()
 {
 	int id = -1;
@@ -699,11 +765,6 @@ int Alife::bite()
 		Alife *p = ite.second;
 		if(p->id == this->id)continue;
 		double dist = (p->x - x) * (p->x - x) + (p->y - y) * (p->y - y);
-		
-		#ifdef ALIFEDEBUG
-		ofs << "i: " << p->id << std::endl;
-		ofs << "min_dist: " << min_dist << " dist: " << dist << std::endl;
-		#endif
 
 		if(dist <= (double)(size * size))
 		{
@@ -717,13 +778,6 @@ int Alife::bite()
 
 	if(id != -1)alife_list[id]->life--;
 
-	
-
-	
-	#ifdef ALIFEDEBUG
-	ofs << "id: " << id << std::endl;
-	#endif
-
 	return 1;
 }
 
@@ -735,9 +789,26 @@ int Alife::division_i()
 		life = 0;
 		return 0;
 	}
-	Alife *p = new Alife(this->x, this->y, getVelocityX(), getVelocityY());
-	p->setColor(getColor());
+	Alife *p = new Alife(this->x + (GetRand(50) + 50) * (GetRand(1) ? 1 : -1), this->y + (GetRand(50)+50) * (GetRand(1)?1:-1), getVelocityX(), getVelocityY());
+	p->setColor(this->color);
 	p->setMem(cpu->rip+2, length);
+	cpu->stack[cpu->top++] = (int64)(cpu->rip + 1);
+	cpu->rcx = length * length;
+	static byte tmpmem[] = {NOP, LOOP, (byte)-1, RET};
+	cpu->rip = tmpmem;
 	
-	return 1 + length;
+	return 2 + length;
+}
+
+int Alife::division()
+{
+	Alife *p = new Alife(this->x + (GetRand(50)+50) * (GetRand(1)?1:-1), this->y + (GetRand(50)+50) * (GetRand(1)?1:-1), 0, 0);
+	p->setColor(this->color);
+	p->setMem(mem, memsize);
+	cpu->stack[cpu->top++] = (int64)(cpu->rip + 1);
+	cpu->rcx = memsize * memsize;
+	static byte tmpmem[] = {NOP, LOOP, (byte)-1, RET};
+	cpu->rip = tmpmem;
+	
+	return 0;
 }

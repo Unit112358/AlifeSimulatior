@@ -5,7 +5,7 @@ int edit();
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-    ChangeWindowMode(TRUE); 
+    ChangeWindowMode(TRUE);
 	SetGraphMode(WINDOW_WIDTH, WINDOW_HEIGHT, 16);       // ウィンドウモード変更
     DxLib_Init();                  // 初期化
     SetDrawScreen(DX_SCREEN_BACK); //裏画面設定
